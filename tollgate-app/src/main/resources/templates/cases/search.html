@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Search')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <h1>Search cases</h1>
+    <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+    <form class="form-inline" method="get" th:action="@{/cases/search}">
+        <input type="text" name="q" class="form-control input-sm" placeholder="Reference, haulier or description" th:value="${q}"/>
+        <select name="state" class="form-control input-sm">
+            <option value="">Any state</option>
+            <option th:each="s : ${ {'LODGED','IN_REVIEW','AWAITING_HAULIER','AWAITING_PANEL','DECIDED','WITHDRAWN','CANCELLED','LAPSED'} }"
+                    th:value="${s}" th:text="${s}" th:selected="${s == state}"></option>
+        </select>
+        <select name="track" class="form-control input-sm">
+            <option value="">Any track</option>
+            <option th:each="t : ${ {'EXPRESS','DESK','ENGINEER','PANEL'} }" th:value="${t}" th:text="${t}" th:selected="${t == track}"></option>
+        </select>
+        <input type="text" name="from" class="form-control input-sm" placeholder="Lodged from dd/mm/yyyy" th:value="${from}"/>
+        <input type="text" name="to" class="form-control input-sm" placeholder="to" th:value="${to}"/>
+        <button class="btn btn-default btn-sm" type="submit">Search</button>
+    </form>
+    <table class="table table-condensed" id="results" th:if="${results != null}">
+        <thead><tr><th>Case</th><th>Haulier</th><th>State</th><th>Track</th><th>Officer</th><th>Age</th></tr></thead>
+        <tbody>
+        <tr th:each="r : ${results}">
+            <td><a th:href="@{/cases/{ref}(ref=${r['reference']})}" th:text="${r['reference']}"></a></td>
+            <td th:text="${r['haulier']}"></td><td th:text="${r['stateLabel']}"></td><td th:text="${r['track']}"></td>
+            <td th:text="${r['assigned_officer']}"></td><td th:text="${r['ageDays']} + ' days'"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

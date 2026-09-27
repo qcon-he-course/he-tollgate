@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!-- $Id: load-types.html 1057 2017-09-18 09:20:48Z gferrand $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Load types')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Load types</h1>
+    <table class="table table-condensed">
+        <thead><tr><th>Code</th><th>Description</th></tr></thead>
+        <tbody>
+        <tr th:each="loadType : ${loadTypes}">
+            <td th:text="${loadType.code}">TRANSFORMER</td>
+            <td>
+                <form th:action="@{/admin/load-types/{id}(id=${loadType.id})}" method="post" class="form-inline">
+                    <input type="text" class="form-control input-sm" name="description" size="40" th:value="${loadType.description}"/>
+                    <button type="submit" class="btn btn-default btn-sm">Save</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,8 @@
+Subject: Application ${reference} refused
+Dear ${haulierName},
+
+Your application ${reference} to move an abnormal load on route ${routeCode} has been refused.
+
+Reason: ${reason}
+
+Halvern Crossings Permit Office

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!-- One-off bank holidays proclaimed after the calendar was generated. See ADR-0007. -->
+
+    <changeSet id="ref-006-jubilee-2022" author="hscott" context="reference">
+        <comment>Spring bank holiday 2022 moved to Thursday 2 June, extra holiday Friday 3 June (Platinum Jubilee)</comment>
+        <delete tableName="holiday">
+            <where>holiday_date = '2022-05-30'</where>
+        </delete>
+        <insert tableName="holiday">
+            <column name="holiday_date" valueDate="2022-06-02"/>
+            <column name="description" value="Spring bank holiday"/>
+        </insert>
+        <insert tableName="holiday">
+            <column name="holiday_date" valueDate="2022-06-03"/>
+            <column name="description" value="Platinum Jubilee bank holiday"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="ref-006-state-funeral-2022" author="hscott" context="reference">
+        <comment>Bank holiday for the State Funeral, Monday 19 September 2022</comment>
+        <insert tableName="holiday">
+            <column name="holiday_date" valueDate="2022-09-19"/>
+            <column name="description" value="Bank holiday for the State Funeral of Queen Elizabeth II"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="ref-006-coronation-2023" author="lbrandt" context="reference">
+        <comment>Bank holiday for the Coronation, Monday 8 May 2023</comment>
+        <insert tableName="holiday">
+            <column name="holiday_date" valueDate="2023-05-08"/>
+            <column name="description" value="Bank holiday for the Coronation of King Charles III"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

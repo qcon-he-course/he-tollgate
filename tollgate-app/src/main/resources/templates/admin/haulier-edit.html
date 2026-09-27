@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<!-- $Id: haulier-edit.html 1063 2017-09-21 16:33:09Z rmistry $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Haulier')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1 th:text="${haulier != null} ? ${haulier.name} : 'New haulier'">Haulier</h1>
+    <form th:action="${haulier != null} ? @{/admin/hauliers/{id}(id=${haulier.id})} : @{/admin/hauliers/new}"
+          th:object="${haulierForm}" method="post" class="form-horizontal">
+        <h3>Details</h3>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="name">Name</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" th:field="*{name}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="contactName">Contact name</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" th:field="*{contactName}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('contactName')}" th:errors="*{contactName}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="contactEmail">Contact email</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" th:field="*{contactEmail}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('contactEmail')}" th:errors="*{contactEmail}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="phone">Phone</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" th:field="*{phone}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="addressLine1">Address</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" th:field="*{addressLine1}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('addressLine1')}" th:errors="*{addressLine1}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="town">Town</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" th:field="*{town}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('town')}" th:errors="*{town}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="postcode">Postcode</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" th:field="*{postcode}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('postcode')}" th:errors="*{postcode}"></span>
+            </div>
+        </div>
+        <h3>Operator licence</h3>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="licenceNumber">Licence number</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" th:field="*{licenceNumber}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('licenceNumber')}" th:errors="*{licenceNumber}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="licenceValidFrom">Valid from (dd/mm/yyyy)</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" th:field="*{licenceValidFrom}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('licenceValidFrom')}" th:errors="*{licenceValidFrom}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="licenceExpiryDate">Expiry date (dd/mm/yyyy)</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" th:field="*{licenceExpiryDate}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('licenceExpiryDate')}" th:errors="*{licenceExpiryDate}"></span>
+            </div>
+        </div>
+        <h3>Insurance</h3>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="insurer">Insurer</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" th:field="*{insurer}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('insurer')}" th:errors="*{insurer}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="policyNumber">Policy number</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" th:field="*{policyNumber}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('policyNumber')}" th:errors="*{policyNumber}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="insuranceStartDate">Start date (dd/mm/yyyy)</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" th:field="*{insuranceStartDate}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('insuranceStartDate')}" th:errors="*{insuranceStartDate}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="insuranceEndDate">End date (dd/mm/yyyy)</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" th:field="*{insuranceEndDate}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('insuranceEndDate')}" th:errors="*{insuranceEndDate}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-5">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a class="btn btn-default" th:href="@{/admin/hauliers}">Cancel</a>
+            </div>
+        </div>
+    </form>
+    <div th:if="${haulier != null}">
+        <h3>Vehicles</h3>
+        <p><a class="btn btn-default btn-sm" th:href="@{/admin/hauliers/{id}/vehicles/new(id=${haulier.id})}">Add vehicle</a></p>
+        <table class="table table-condensed">
+            <thead><tr><th>Registration</th><th>Category</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="v : ${vehicles}">
+                <td th:text="${v.registration}">AB17 CDE</td>
+                <td th:text="${v.category}">LOW_LOADER</td>
+                <td><a th:href="@{/admin/vehicles/{id}(id=${v.id})}">Edit</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

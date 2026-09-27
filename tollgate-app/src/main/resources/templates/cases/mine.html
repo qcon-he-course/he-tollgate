@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('My cases')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>My cases</h1>
+    <table class="table table-condensed" id="my-cases">
+        <thead><tr><th>SLA</th><th>Days left</th><th>Case</th><th>Haulier</th><th>State</th><th>Track</th></tr></thead>
+        <tbody>
+        <tr th:each="c : ${cases}" th:classappend="${c['sla_status'] == 'RED'} ? 'danger' : (${c['sla_status'] == 'AMBER'} ? 'warning' : '')">
+            <td th:text="${c['sla_status']} ?: '-'"></td><td th:text="${c['days_left']} ?: '-'"></td>
+            <td><a th:href="@{/cases/{ref}(ref=${c['reference']})}" th:text="${c['reference']}"></a></td>
+            <td th:text="${c['haulier']}"></td><td th:text="${c['stateLabel']}"></td><td th:text="${c['track']}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <h3>Assign an engineer to several cases</h3>
+    <form class="form-inline" method="post" th:action="@{/cases/assign-engineer}">
+        <input type="text" name="references" class="form-control input-sm" placeholder="Case references"/>
+        <select name="engineer" class="form-control input-sm">
+            <option th:each="e : ${engineers}" th:value="${e['username']}" th:text="${e['fullName']} + ' (' + ${e['openCases']} + ' open)'"></option>
+        </select>
+        <button class="btn btn-default btn-sm" type="submit">Assign</button>
+    </form>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="2017-008-audit-append-only" author="rmistry">
+        <comment>BR-46: audit entries are never changed or removed by the application.</comment>
+        <sql>REVOKE UPDATE, DELETE ON audit_entry FROM tollgate_app;</sql>
+    </changeSet>
+
+</databaseChangeLog>

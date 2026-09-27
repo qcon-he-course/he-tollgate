@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Reassign cases')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Reassign open cases</h1>
+    <form class="form-inline" method="post" th:action="@{/admin/reassign}">
+        <select name="from" class="form-control input-sm"><option th:each="o : ${workload}" th:value="${o['username']}" th:text="${o['fullName']} + ' (' + ${o['openCases']} + ')'"></option></select>
+        to
+        <select name="to" class="form-control input-sm"><option th:each="o : ${workload}" th:value="${o['username']}" th:text="${o['fullName']}"></option></select>
+        <button class="btn btn-default btn-sm" type="submit">Move open cases</button>
+    </form>
+    <h3>Open cases by officer</h3>
+    <table class="table table-condensed"><tr th:each="e : ${openByOfficer}"><th th:text="${e.key}"></th><td th:text="${e.value}"></td></tr></table>
+    <h3>Support</h3>
+    <form method="post" th:action="@{/admin/support/resync-status}">
+        <button class="btn btn-default btn-sm" type="submit">Resync application statuses (INC-40330)</button>
+    </form>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

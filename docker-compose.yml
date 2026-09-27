@@ -1,0 +1,31 @@
+# Local services for development. See docs/dev-setup.md.
+#
+#   docker compose up -d
+#   scripts/db-update.sh
+#
+# Mailpit's web UI is at http://localhost:8025
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init-tollgate.sql:/docker-entrypoint-initdb.d/init-tollgate.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+volumes:
+  pgdata:

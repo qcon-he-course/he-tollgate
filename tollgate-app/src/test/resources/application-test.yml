@@ -1,0 +1,18 @@
+# Tests run against an embedded PostgreSQL database (ADR-0011). The schema comes from schema-test.sql,
+# not from Liquibase.
+spring:
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema-test.sql
+      data-locations: classpath:data-test.sql
+  jpa:
+    hibernate:
+      ddl-auto: none
+  mail:
+    host: localhost
+    port: 2525
+
+tollgate:
+  attachments:
+    dir: ${java.io.tmpdir}/tollgate-test/attachments

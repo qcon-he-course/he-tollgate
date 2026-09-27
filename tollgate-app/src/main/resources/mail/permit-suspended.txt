@@ -1,0 +1,8 @@
+Subject: Permit ${permitReference} suspended
+Dear ${haulierName},
+
+Permit ${permitReference} is suspended because ${structure} is closed from ${closureStart} to ${closureEnd}.
+
+Do not make any move under this permit while it is suspended. We will write to you when the closure ends.
+
+Halvern Crossings Permit Office

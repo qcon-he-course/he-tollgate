@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <!-- Test and training accounts. Demo password is in the handover notes. Not for production. -->
+    <changeSet id="2017-100-demo-staff" author="koduya" context="demo">
+        <loadData tableName="app_user" file="db/changelog/2017/demo-staff.csv" separator=";">
+            <column name="id" type="NUMERIC"/>
+            <column name="enabled" type="BOOLEAN"/>
+            <column name="created_at" type="DATETIME"/>
+        </loadData>
+        <loadData tableName="user_role" file="db/changelog/2017/demo-staff-roles.csv" separator=";">
+            <column name="user_id" type="NUMERIC"/>
+            <column name="role" type="STRING"/>
+        </loadData>
+        <sql>SELECT setval(pg_get_serial_sequence('app_user', 'id'), (SELECT MAX(id) FROM app_user))</sql>
+    </changeSet>
+
+</databaseChangeLog>

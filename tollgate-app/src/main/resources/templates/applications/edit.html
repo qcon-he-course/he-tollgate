@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<!-- $Id: edit.html 1118 2017-11-01 12:05:44Z gferrand $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Application')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1 th:text="${app != null} ? 'Edit ' + ${app.reference} : 'New application'">Application</h1>
+    <p class="text-muted">Enter the details from the haulier's application form. A draft can be saved incomplete
+        and finished later.</p>
+    <form th:action="${app != null} ? @{/applications/{ref}/edit(ref=${app.reference})} : @{/applications/new}"
+          th:object="${applicationForm}" method="post" class="form-horizontal">
+        <h3>Haulier</h3>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="haulierId">Haulier</label>
+            <div class="col-sm-5">
+                <select class="form-control" th:field="*{haulierId}">
+                    <option value="">-- choose --</option>
+                    <option th:each="x : ${hauliers}" th:value="${x.id}" th:text="${x.name}"></option>
+                </select>
+                <span class="field-error" th:if="${#fields.hasErrors('haulierId')}" th:errors="*{haulierId}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="vehicleRegistration">Vehicle registration</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" th:field="*{vehicleRegistration}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('vehicleRegistration')}" th:errors="*{vehicleRegistration}"></span>
+            </div>
+        </div>
+        <h3>Load</h3>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="loadTypeId">Load type</label>
+            <div class="col-sm-5">
+                <select class="form-control" th:field="*{loadTypeId}">
+                    <option value="">-- choose --</option>
+                    <option th:each="x : ${loadTypes}" th:value="${x.id}" th:text="${x.code}"></option>
+                </select>
+                <span class="field-error" th:if="${#fields.hasErrors('loadTypeId')}" th:errors="*{loadTypeId}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="loadDescription">Description</label>
+            <div class="col-sm-6">
+                <textarea class="form-control" rows="4" th:field="*{loadDescription}" maxlength="2000"></textarea><!-- CR-140 -->
+                <span class="field-error" th:if="${#fields.hasErrors('loadDescription')}" th:errors="*{loadDescription}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="grossMassKg">Gross mass (kg)</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" th:field="*{grossMassKg}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('grossMassKg')}" th:errors="*{grossMassKg}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="widthM">Width (m)</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" th:field="*{widthM}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('widthM')}" th:errors="*{widthM}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="lengthM">Length (m)</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" th:field="*{lengthM}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('lengthM')}" th:errors="*{lengthM}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="heightM">Height (m)</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" th:field="*{heightM}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('heightM')}" th:errors="*{heightM}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-4">
+                <label class="checkbox-inline"><input type="checkbox" th:field="*{hazardous}"/> Hazardous load</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="unNumber">UN number</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" th:field="*{unNumber}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('unNumber')}" th:errors="*{unNumber}"></span>
+            </div>
+        </div>
+        <h3>Route and dates</h3>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="routeId">Route</label>
+            <div class="col-sm-5">
+                <select class="form-control" th:field="*{routeId}">
+                    <option value="">-- choose --</option>
+                    <option th:each="x : ${routes}" th:value="${x.id}" th:text="${x.code} + ' (' + ${x.entryJunction} + ' to ' + ${x.exitJunction} + ')'"></option>
+                </select>
+                <span class="field-error" th:if="${#fields.hasErrors('routeId')}" th:errors="*{routeId}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="firstMoveDate">First move date (dd/mm/yyyy)</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" th:field="*{firstMoveDate}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('firstMoveDate')}" th:errors="*{firstMoveDate}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="lastMoveDate">Last move date (dd/mm/yyyy)</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" th:field="*{lastMoveDate}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('lastMoveDate')}" th:errors="*{lastMoveDate}"></span>
+            </div>
+        </div>
+        <h3>Trips</h3>
+        <p class="text-muted">Planned departure for each trip, and the planned estuary crossing where the route
+            crosses Northgate or Southreach. Times as dd/mm/yyyy hh:mm.</p>
+        <table class="table table-condensed">
+            <thead><tr><th>#</th><th>Departure</th><th>Estuary crossing</th></tr></thead>
+            <tbody>
+            <tr th:each="trip, stat : *{trips}">
+                <td th:text="${stat.count}">1</td>
+                <td>
+                    <input type="text" class="form-control input-sm" th:field="*{trips[__${stat.index}__].departure}"/>
+                    <span class="field-error" th:if="${#fields.hasErrors('trips[__${stat.index}__].departure')}"
+                          th:errors="*{trips[__${stat.index}__].departure}"></span>
+                </td>
+                <td>
+                    <input type="text" class="form-control input-sm" th:field="*{trips[__${stat.index}__].crossing}"/>
+                    <span class="field-error" th:if="${#fields.hasErrors('trips[__${stat.index}__].crossing')}"
+                          th:errors="*{trips[__${stat.index}__].crossing}"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-5">
+                <button type="submit" class="btn btn-primary">Save draft</button>
+                <a class="btn btn-default" th:href="${app != null} ? @{/applications/{ref}(ref=${app.reference})} : @{/applications}">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

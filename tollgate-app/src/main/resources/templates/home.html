@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<!-- $Id: home.html 1074 2017-09-28 16:30:18Z koduya $ -->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/layout :: head('Home')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Tollgate</h1>
+    <p>Signed in as <strong sec:authentication="name">officer1</strong>.</p>
+    <div class="list-group">
+        <a class="list-group-item" th:href="@{/applications}">Applications</a>
+        <a class="list-group-item" sec:authorize="hasRole('OFFICER')" th:href="@{/applications/new}">Enter a new application</a>
+        <a class="list-group-item" th:href="@{/permits}">Permits</a>
+        <a class="list-group-item" th:href="@{/closures}">Structure closures</a>
+        <a class="list-group-item" sec:authorize="hasRole('ADMIN')" th:href="@{/admin}">Administration</a>
+    </div>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

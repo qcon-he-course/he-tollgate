@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<!-- $Id: index.html 1052 2017-09-14 09:40:03Z koduya $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Admin')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Administration</h1>
+    <div class="list-group">
+        <a class="list-group-item" th:href="@{/admin/structures}">Structures</a>
+        <a class="list-group-item" th:href="@{/admin/routes}">Routes</a>
+        <a class="list-group-item" th:href="@{/admin/load-types}">Load types</a>
+        <a class="list-group-item" th:href="@{/admin/questions}">Question catalogue</a>
+        <a class="list-group-item" th:href="@{/admin/holidays}">Holiday calendar</a>
+        <a class="list-group-item" th:href="@{/admin/hauliers}">Hauliers and vehicles</a>
+        <a class="list-group-item" th:href="@{/admin/users}">Staff users</a>
+        <!-- CR-121 -->
+        <a class="list-group-item" th:href="@{/admin/settings}">Settings</a>
+        <a class="list-group-item" th:href="@{/admin/reassign}">Reassign cases</a>
+    </div>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

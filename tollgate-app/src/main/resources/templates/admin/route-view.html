@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!-- $Id: route-view.html 1056 2017-09-15 16:02:10Z gferrand $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Route')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Route <span th:text="${route.code}">R1</span>
+        <small th:text="${route.entryJunction} + ' to ' + ${route.exitJunction}">J1 to J4</small></h1>
+    <p>Minimum clearance:
+        <strong th:text="${minimumClearance != null} ? ${minimumClearance} + ' m' : 'no overbridges'">5.10 m</strong></p>
+    <table class="table table-condensed">
+        <thead><tr><th>#</th><th>Structure</th><th>Name</th><th>Type</th><th class="num">Rating (t)</th><th class="num">Clearance (m)</th></tr></thead>
+        <tbody>
+        <tr th:each="seg : ${route.segments}">
+            <td th:text="${seg.seq}">1</td>
+            <td th:text="${seg.structure.code}">S01</td>
+            <td th:text="${seg.structure.name}"></td>
+            <td th:text="${seg.structure.structureType}"></td>
+            <td class="num" th:text="${seg.structure.massRatingT}"></td>
+            <td class="num" th:text="${seg.structure.clearanceM}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <form th:action="@{/admin/routes/{id}(id=${route.id})}" method="post" class="form-inline">
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" class="form-control" id="description" name="description" size="50"
+                   th:value="${route.description}"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a class="btn btn-default" th:href="@{/admin/routes}">Back</a>
+    </form>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

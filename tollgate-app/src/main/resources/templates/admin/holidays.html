@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!-- $Id: holidays.html 1058 2017-09-18 11:54:21Z rmistry $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Holidays')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Holiday calendar <small th:text="${year}">2017</small></h1>
+    <p>
+        <a th:href="@{/admin/holidays(year=${year - 1})}">&laquo; <span th:text="${year - 1}"></span></a>
+        &nbsp;|&nbsp;
+        <a th:href="@{/admin/holidays(year=${year + 1})}"><span th:text="${year + 1}"></span> &raquo;</a>
+    </p>
+    <table id="holidays" class="table table-striped table-condensed">
+        <thead><tr><th>Date</th><th>Day</th><th>Description</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="h : ${holidays}">
+            <td th:text="${#dates.format(h.holidayDate, 'dd/MM/yyyy')}">25/12/2017</td>
+            <td th:text="${#dates.format(h.holidayDate, 'EEEE')}">Monday</td>
+            <td th:text="${h.description}">Christmas Day</td>
+            <td>
+                <form th:action="@{/admin/holidays/{id}/delete(id=${h.id},year=${year})}" method="post" class="inline">
+                    <button type="submit" class="btn btn-link btn-xs">Remove</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <h3>Add a holiday</h3>
+    <form th:action="@{/admin/holidays}" th:object="${holidayForm}" method="post" class="form-inline">
+        <div class="form-group">
+            <label for="holidayDate">Date</label>
+            <input type="text" class="form-control" th:field="*{holidayDate}" placeholder="dd/mm/yyyy" size="12"/>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" class="form-control" th:field="*{description}" size="40"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Add</button>
+        <div class="field-error" th:if="${#fields.hasErrors('holidayDate')}" th:errors="*{holidayDate}"></div>
+        <div class="field-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+    </form>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

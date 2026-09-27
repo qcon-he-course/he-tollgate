@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="2017-004-application-ref-seq" author="gferrand">
+        <createSequence sequenceName="application_ref_seq" startValue="1" incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="2017-004-movement-application" author="gferrand">
+        <createTable tableName="movement_application">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="reference" type="VARCHAR(20)"><constraints nullable="false" unique="true"/></column>
+            <column name="haulier_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_application_haulier" references="haulier(id)"/>
+            </column>
+            <column name="vehicle_id" type="BIGINT">
+                <constraints foreignKeyName="fk_application_vehicle" references="vehicle(id)"/>
+            </column>
+            <column name="load_type_id" type="BIGINT">
+                <constraints foreignKeyName="fk_application_load_type" references="load_type(id)"/>
+            </column>
+            <!-- BR-09: free text description of the load -->
+            <column name="load_description" type="VARCHAR(500)"/>
+            <column name="gross_mass_kg" type="INTEGER"/>
+            <column name="width_m" type="NUMERIC(4,2)"/>
+            <column name="length_m" type="NUMERIC(5,2)"/>
+            <column name="height_m" type="NUMERIC(4,2)"/>
+            <column name="hazardous" type="BOOLEAN" defaultValueBoolean="false"><constraints nullable="false"/></column>
+            <column name="un_number" type="VARCHAR(4)"/>
+            <column name="route_id" type="BIGINT">
+                <constraints foreignKeyName="fk_application_route" references="route(id)"/>
+            </column>
+            <column name="first_move_date" type="DATE"/>
+            <column name="last_move_date" type="DATE"/>
+            <!-- DRAFT, SUBMITTED, APPROVED, REJECTED -->
+            <column name="status" type="VARCHAR(20)"><constraints nullable="false"/></column>
+            <column name="created_by" type="VARCHAR(50)"><constraints nullable="false"/></column>
+            <column name="created_at" type="TIMESTAMP"><constraints nullable="false"/></column>
+            <column name="lodged_by" type="VARCHAR(50)"/>
+            <column name="lodged_at" type="TIMESTAMP"/>
+        </createTable>
+        <createIndex tableName="movement_application" indexName="ix_application_haulier">
+            <column name="haulier_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="2017-004-application-trip" author="gferrand">
+        <createTable tableName="application_trip">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="application_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_trip_application" references="movement_application(id)"/>
+            </column>
+            <column name="trip_no" type="INTEGER"><constraints nullable="false"/></column>
+            <column name="departure_at" type="TIMESTAMP"><constraints nullable="false"/></column>
+            <column name="crossing_at" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2017-004-attachment" author="koduya">
+        <createTable tableName="attachment">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="application_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_attachment_application" references="movement_application(id)"/>
+            </column>
+            <column name="file_name" type="VARCHAR(255)"><constraints nullable="false"/></column>
+            <column name="attachment_type" type="VARCHAR(30)"><constraints nullable="false"/></column>
+            <column name="size_bytes" type="BIGINT"><constraints nullable="false"/></column>
+            <column name="storage_path" type="VARCHAR(500)"><constraints nullable="false"/></column>
+            <column name="uploaded_by" type="VARCHAR(50)"><constraints nullable="false"/></column>
+            <column name="uploaded_at" type="TIMESTAMP"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

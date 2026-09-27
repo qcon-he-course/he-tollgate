@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <!--
+        England and Wales bank holidays calculated from the standard rules, plus 24 December
+        (Halvern company day). Admins maintain further changes on the Holidays screen (BR-14).
+    -->
+    <changeSet id="ref-004-holidays-2017-2027" author="rmistry" context="reference">
+        <loadData tableName="holiday" file="db/changelog/reference/holidays-2017-2027.csv" separator=";">
+            <column name="holiday_date" type="DATE"/>
+            <column name="description" type="STRING"/>
+        </loadData>
+    </changeSet>
+
+</databaseChangeLog>

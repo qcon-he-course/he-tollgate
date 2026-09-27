@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/layout :: head('Cases')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Open cases</h1>
+    <p>
+        <span th:each="entry : ${counts}" class="label label-default" style="margin-right:4px"
+              th:text="${entry.key} + ': ' + ${entry.value}">IN_REVIEW: 3</span>
+    </p>
+    <form method="get" th:action="@{/dashboard-old}" class="form-inline">
+        <select name="track" class="form-control input-sm">
+            <option value="">All tracks</option>
+            <option th:each="t : ${ {'EXPRESS','DESK','ENGINEER','PANEL'} }" th:value="${t}" th:text="${t}" th:selected="${t == track}"></option>
+        </select>
+        <select name="state" class="form-control input-sm">
+            <option value="">All states</option>
+            <option th:each="s : ${ {'LODGED','IN_REVIEW','AWAITING_HAULIER','AWAITING_PANEL'} }" th:value="${s}" th:text="${s}" th:selected="${s == state}"></option>
+        </select>
+        <select name="officer" class="form-control input-sm">
+            <option value="">All officers</option>
+            <option th:each="o : ${officers}" th:value="${o.username}" th:text="${o.fullName}" th:selected="${o.username == officer}"></option>
+        </select>
+        <button type="submit" class="btn btn-default btn-sm">Filter</button>
+    </form>
+    <table class="table table-striped table-condensed" id="cases">
+        <thead><tr><th>Case</th><th>Track</th><th>State</th><th>Lodged</th><th>Officer</th><th>Engineer</th><th>Warnings</th></tr></thead>
+        <tbody>
+        <tr th:each="c : ${cases}" th:classappend="${c.state == 'AWAITING_HAULIER'} ? 'warning' : ''">
+            <td><a th:href="@{/cases/{ref}(ref=${c.reference})}" th:text="${c.reference}"></a></td>
+            <td th:text="${T(com.halvern.tollgate.platform.util.TrackUtils).label(c.track)}"></td>
+            <td th:text="${c.state}"></td>
+            <td th:text="${#temporals.format(c.lodgedAt, 'dd/MM/yyyy')}"></td>
+            <td th:text="${c.assignedOfficer}"></td>
+            <td th:text="${c.assignedEngineer}"></td>
+            <td th:text="${c.warnings}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

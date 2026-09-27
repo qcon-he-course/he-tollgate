@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!--
+        Platform Modernisation 2022-2023.
+        New timestamp columns are TIMESTAMP WITH TIME ZONE and hold UTC instants (ADR-0008).
+        Business dates are DATE columns holding London dates (ADR-0007).
+    -->
+
+    <changeSet id="2022-01-sla-clock" author="oade">
+        <comment>SLA clock per case (ADR-0009)</comment>
+        <createTable tableName="sla_clock">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="case_id" type="BIGINT">
+                <constraints nullable="false" unique="true" foreignKeyName="fk_sla_clock_case" references="case_file(id)"/>
+            </column>
+            <column name="started_on" type="DATE"><constraints nullable="false"/></column>
+            <column name="stopped_on" type="DATE"/>
+            <column name="target_days" type="INTEGER"><constraints nullable="false"/></column>
+            <column name="elapsed_days" type="INTEGER" defaultValueNumeric="0"><constraints nullable="false"/></column>
+            <column name="paused_days" type="INTEGER" defaultValueNumeric="0"><constraints nullable="false"/></column>
+            <column name="status" type="VARCHAR(10)"><constraints nullable="false"/></column>
+            <column name="calculated_on" type="DATE"><constraints nullable="false"/></column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE"><constraints nullable="false"/></column>
+        </createTable>
+        <createIndex tableName="sla_clock" indexName="ix_sla_clock_status">
+            <column name="status"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="2022-02-sla-pause" author="oade">
+        <comment>Periods when the SLA clock does not run (ADR-0009)</comment>
+        <createTable tableName="sla_pause">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="case_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_sla_pause_case" references="case_file(id)"/>
+            </column>
+            <column name="cause" type="VARCHAR(30)"><constraints nullable="false"/></column>
+            <column name="started_on" type="DATE"><constraints nullable="false"/></column>
+            <column name="ended_on" type="DATE"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE"><constraints nullable="false"/></column>
+        </createTable>
+        <createIndex tableName="sla_pause" indexName="ix_sla_pause_case">
+            <column name="case_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="2022-03-permit-status-history" author="lbrandt">
+        <comment>Every permit status change, however the row was changed. See ADR-0006.</comment>
+        <createTable tableName="permit_status_history">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="permit_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_permit_status_history_permit" references="permit(id)"/>
+            </column>
+            <column name="permit_reference" type="VARCHAR(20)"><constraints nullable="false"/></column>
+            <column name="version" type="INTEGER"><constraints nullable="false"/></column>
+            <column name="old_status" type="VARCHAR(12)"/>
+            <column name="new_status" type="VARCHAR(12)"><constraints nullable="false"/></column>
+            <column name="changed_by" type="VARCHAR(63)"><constraints nullable="false"/></column>
+            <column name="changed_at" type="TIMESTAMP WITH TIME ZONE" defaultValueComputed="now()"><constraints nullable="false"/></column>
+        </createTable>
+        <createIndex tableName="permit_status_history" indexName="ix_permit_status_history_reference">
+            <column name="permit_reference"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="2022-04-trg-permit-status-history" author="lbrandt">
+        <comment>
+            Record permit status changes in the database, so that changes made through the older JDBC code are
+            captured as well as those made through the services.
+        </comment>
+        <sql splitStatements="false">
+            CREATE OR REPLACE FUNCTION record_permit_status_change() RETURNS trigger
+                LANGUAGE plpgsql SECURITY INVOKER AS $$
+            BEGIN
+                IF TG_OP = 'INSERT' THEN
+                    INSERT INTO permit_status_history (permit_id, permit_reference, version, old_status, new_status, changed_by)
+                    VALUES (NEW.id, NEW.reference, NEW.version, NULL, NEW.status, current_user);
+                ELSIF NEW.status IS DISTINCT FROM OLD.status THEN
+                    INSERT INTO permit_status_history (permit_id, permit_reference, version, old_status, new_status, changed_by)
+                    VALUES (NEW.id, NEW.reference, NEW.version, OLD.status, NEW.status, current_user);
+                END IF;
+                RETURN NEW;
+            END;
+            $$
+        </sql>
+        <sql>
+            CREATE TRIGGER trg_permit_status_history
+                AFTER INSERT OR UPDATE OF status ON permit
+                FOR EACH ROW EXECUTE FUNCTION record_permit_status_change()
+        </sql>
+        <rollback>
+            DROP TRIGGER IF EXISTS trg_permit_status_history ON permit;
+            DROP FUNCTION IF EXISTS record_permit_status_change();
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

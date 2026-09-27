@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="2024-01-feature-flag" author="sanjay.k">
+        <comment>CR-118 feature flags so fixes can be switched on and off without a release</comment>
+        <createTable tableName="feature_flag">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="name" type="VARCHAR(100)"><constraints nullable="false" unique="true"/></column>
+            <column name="enabled" type="BOOLEAN" defaultValueBoolean="false"><constraints nullable="false"/></column>
+            <column name="description" type="VARCHAR(500)"/>
+            <column name="updated_at" type="TIMESTAMP"/>
+            <column name="updated_by" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2024-02-feature-flag-seed" author="sanjay.k">
+        <comment>CR-118 initial flags</comment>
+        <insert tableName="feature_flag">
+            <column name="name" value="express.auto-issue"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="description" value="Issue Express cases with no warnings automatically"/>
+            <column name="updated_at" valueDate="2024-03-04T10:00:00"/>
+            <column name="updated_by" value="sanjay.k"/>
+        </insert>
+        <insert tableName="feature_flag">
+            <column name="name" value="dashboard.v2"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="description" value="SLA dashboard instead of the old worklist"/>
+            <column name="updated_at" valueDate="2024-03-04T10:00:00"/>
+            <column name="updated_by" value="sanjay.k"/>
+        </insert>
+        <insert tableName="feature_flag">
+            <column name="name" value="permit.pdf.legacy-renderer"/>
+            <column name="enabled" valueBoolean="false"/>
+            <column name="description" value="Print permits with the old iText writer (rollback for the HTML renderer)"/>
+            <column name="updated_at" valueDate="2024-03-04T10:00:00"/>
+            <column name="updated_by" value="sanjay.k"/>
+        </insert>
+        <insert tableName="feature_flag">
+            <column name="name" value="consultation.lapse-grace-day"/>
+            <column name="enabled" valueBoolean="false"/>
+            <column name="description" value="Give hauliers one extra day before a case lapses"/>
+            <column name="updated_at" valueDate="2024-03-04T10:00:00"/>
+            <column name="updated_by" value="sanjay.k"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="2024-03-fast-path-flag" author="m.oyelaran">
+        <comment>INC-40213 fast path for simple Express cases</comment>
+        <insert tableName="feature_flag">
+            <column name="name" value="assessment.fast-path"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="description" value="Skip trigger evaluation when the score track is Express"/>
+            <column name="updated_at" valueDate="2024-05-21T16:40:00"/>
+            <column name="updated_by" value="m.oyelaran"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="2024-04-system-setting" author="sanjay.k">
+        <comment>CR-121 settings screen: values admins can change without a release</comment>
+        <createTable tableName="system_setting">
+            <column name="setting_key" type="VARCHAR(100)"><constraints primaryKey="true"/></column>
+            <column name="setting_value" type="VARCHAR(200)"><constraints nullable="false"/></column>
+            <column name="description" type="VARCHAR(500)"/>
+            <column name="updated_at" type="TIMESTAMP"/>
+            <column name="updated_by" type="VARCHAR(50)"/>
+        </createTable>
+        <insert tableName="system_setting">
+            <column name="setting_key" value="intake.short-notice-days"/>
+            <column name="setting_value" value="10"/>
+            <column name="description" value="Short-notice business days"/>
+        </insert>
+        <insert tableName="system_setting">
+            <column name="setting_key" value="consultation.round-days"/>
+            <column name="setting_value" value="5"/>
+            <column name="description" value="Query round business days"/>
+        </insert>
+        <insert tableName="system_setting">
+            <column name="setting_key" value="sla.target.express"/>
+            <column name="setting_value" value="2"/>
+            <column name="description" value="SLA target, Express (business days)"/>
+        </insert>
+        <insert tableName="system_setting">
+            <column name="setting_key" value="sla.target.desk"/>
+            <column name="setting_value" value="5"/>
+            <column name="description" value="SLA target, Desk (business days)"/>
+        </insert>
+        <insert tableName="system_setting">
+            <column name="setting_key" value="sla.target.engineer"/>
+            <column name="setting_value" value="15"/>
+            <column name="description" value="SLA target, Engineer (business days)"/>
+        </insert>
+        <insert tableName="system_setting">
+            <column name="setting_key" value="sla.target.panel"/>
+            <column name="setting_value" value="25"/>
+            <column name="description" value="SLA target, Panel (business days)"/>
+        </insert>
+        <insert tableName="system_setting">
+            <column name="setting_key" value="sla.amber-percent"/>
+            <column name="setting_value" value="75"/>
+            <column name="description" value="SLA amber threshold (% of target)"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="2024-05-permit-window-not-null" author="j.whitcombe">
+        <comment>INC-40410 permits with no movement window broke the expiry job. Backfill from the application, then require them.</comment>
+        <sql>
+            UPDATE permit p SET window_start = a.first_move_date
+              FROM movement_application a WHERE a.id = p.application_id AND p.window_start IS NULL;
+            UPDATE permit p SET window_end = a.last_move_date
+              FROM movement_application a WHERE a.id = p.application_id AND p.window_end IS NULL;
+        </sql>
+        <addNotNullConstraint tableName="permit" columnName="window_start" columnDataType="DATE"/>
+        <addNotNullConstraint tableName="permit" columnName="window_end" columnDataType="DATE"/>
+    </changeSet>
+
+</databaseChangeLog>

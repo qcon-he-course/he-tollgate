@@ -1,0 +1,40 @@
+# Tollgate base configuration.
+# Database connection settings are supplied per environment by Halvern IT.
+
+spring:
+  application:
+    name: tollgate
+  liquibase:
+    # Schema changes are applied by the DBA from tollgate-db (BR-04).
+    enabled: false
+  thymeleaf:
+    cache: true
+  mvc:
+    pathmatch:
+      # PI-20 springfox 3 needs the old path matcher on Boot 2.6+
+      matching-strategy: ant_path_matcher
+  servlet:
+    multipart:
+      # BR-13: attachments up to 10 MB
+      max-file-size: 10MB
+      max-request-size: 11MB
+
+server:
+  port: 8080
+
+tollgate:
+  intake:
+    short-notice-days: 10
+  consultation:
+    round-days: 5
+  mail:
+    from: permits@halvern-crossings.example
+  attachments:
+    dir: /var/lib/tollgate/attachments
+
+# INC-40302 support needs the actuator endpoints to diagnose production issues
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

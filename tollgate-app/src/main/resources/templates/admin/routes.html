@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<!-- $Id: routes.html 1056 2017-09-15 16:02:10Z gferrand $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Routes')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Routes</h1>
+    <table id="routes" class="table table-striped table-condensed">
+        <thead><tr><th>Code</th><th>Entry</th><th>Exit</th><th>Description</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="r : ${routes}">
+            <td th:text="${r.code}">R1</td>
+            <td th:text="${r.entryJunction}">J1</td>
+            <td th:text="${r.exitJunction}">J4</td>
+            <td th:text="${r.description}"></td>
+            <td><a th:href="@{/admin/routes/{id}(id=${r.id})}">View</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

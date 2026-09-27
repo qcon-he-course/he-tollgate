@@ -1,0 +1,24 @@
+# Local development against docker-compose.yml. See docs/dev-setup.md.
+# Run with: ./mvnw -pl tollgate-app spring-boot:run -Dspring-boot.run.profiles=local
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tollgate
+    username: tollgate_app
+    password: tollgate_app
+  mail:
+    host: localhost
+    port: 1025
+  thymeleaf:
+    cache: false
+
+logging:
+  level:
+    com.halvern.tollgate: DEBUG
+
+tollgate:
+  intake:
+    # UAT March 2023: shorter notice period so testers can lodge for next week
+    short-notice-days: 5
+  attachments:
+    dir: ${java.io.tmpdir}/tollgate/attachments

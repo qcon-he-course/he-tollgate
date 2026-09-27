@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="2017-006-permit" author="gferrand">
+        <createTable tableName="permit">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="reference" type="VARCHAR(20)"><constraints nullable="false"/></column>
+            <column name="application_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_permit_application" references="movement_application(id)"/>
+            </column>
+            <!-- ACTIVE, SUSPENDED, REVOKED, EXPIRED -->
+            <column name="status" type="VARCHAR(12)"><constraints nullable="false"/></column>
+            <column name="issued_by" type="VARCHAR(50)"><constraints nullable="false"/></column>
+            <column name="issued_at" type="TIMESTAMP"><constraints nullable="false"/></column>
+            <column name="status_reason" type="VARCHAR(500)"/>
+            <column name="status_changed_at" type="TIMESTAMP"/>
+            <column name="suspended_by_closure_id" type="BIGINT">
+                <constraints foreignKeyName="fk_permit_closure" references="structure_closure(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2017-006-permit-document" author="gferrand">
+        <createTable tableName="permit_document">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="permit_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_permit_document_permit" references="permit(id)"/>
+            </column>
+            <column name="content" type="BYTEA"><constraints nullable="false"/></column>
+            <column name="content_type" type="VARCHAR(50)"><constraints nullable="false"/></column>
+            <column name="generated_at" type="TIMESTAMP"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2017-006-permit-ref-counter" author="gferrand">
+        <comment>BR-31: permit numbers must be gap free within a year, so a sequence cannot be used.</comment>
+        <createTable tableName="permit_ref_counter">
+            <column name="ref_year" type="INTEGER"><constraints primaryKey="true"/></column>
+            <column name="last_value" type="INTEGER"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

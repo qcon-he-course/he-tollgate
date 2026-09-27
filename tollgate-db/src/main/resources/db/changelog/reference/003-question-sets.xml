@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet id="ref-003-questions-wind-turbine-blade" author="koduya" context="reference">
+        <insert tableName="question_set">
+            <column name="load_type_id" valueComputed="(SELECT id FROM load_type WHERE code = 'WIND_TURBINE_BLADE')"/>
+            <column name="version" valueNumeric="1"/>
+            <column name="active" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'WIND_TURBINE_BLADE' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="1"/>
+            <column name="question_text" value="Give the blade length and the rear overhang beyond the trailer in metres."/>
+            <column name="mandatory" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'WIND_TURBINE_BLADE' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="2"/>
+            <column name="question_text" value="Describe how the blade is secured against wind loading while crossing the estuary bridges."/>
+            <column name="mandatory" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'WIND_TURBINE_BLADE' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="3"/>
+            <column name="question_text" value="Will a steerable rear bogie be used? If so, give the operator&apos;s name."/>
+            <column name="mandatory" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'WIND_TURBINE_BLADE' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="4"/>
+            <column name="question_text" value="Describe any planned stops on the Halvern network."/>
+            <column name="mandatory" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="ref-003-questions-transformer" author="koduya" context="reference">
+        <insert tableName="question_set">
+            <column name="load_type_id" valueComputed="(SELECT id FROM load_type WHERE code = 'TRANSFORMER')"/>
+            <column name="version" valueNumeric="1"/>
+            <column name="active" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'TRANSFORMER' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="1"/>
+            <column name="question_text" value="Give the axle loads for each axle of the vehicle combination."/>
+            <column name="mandatory" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'TRANSFORMER' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="2"/>
+            <column name="question_text" value="Describe the trailer type and number of axle lines."/>
+            <column name="mandatory" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'TRANSFORMER' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="3"/>
+            <column name="question_text" value="Is the transformer shipped with oil? State the volume in litres."/>
+            <column name="mandatory" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'TRANSFORMER' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="4"/>
+            <column name="question_text" value="Give the name of the site contact at the destination."/>
+            <column name="mandatory" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="ref-003-questions-mobile-crane" author="koduya" context="reference">
+        <insert tableName="question_set">
+            <column name="load_type_id" valueComputed="(SELECT id FROM load_type WHERE code = 'MOBILE_CRANE')"/>
+            <column name="version" valueNumeric="1"/>
+            <column name="active" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'MOBILE_CRANE' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="1"/>
+            <column name="question_text" value="Give the crane make and model."/>
+            <column name="mandatory" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'MOBILE_CRANE' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="2"/>
+            <column name="question_text" value="Is the counterweight carried on the crane or on a separate vehicle?"/>
+            <column name="mandatory" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'MOBILE_CRANE' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="3"/>
+            <column name="question_text" value="Give the axle loads for each axle."/>
+            <column name="mandatory" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'MOBILE_CRANE' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="4"/>
+            <column name="question_text" value="Describe any ballast or attachments carried."/>
+            <column name="mandatory" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="ref-003-questions-construction-plant" author="koduya" context="reference">
+        <insert tableName="question_set">
+            <column name="load_type_id" valueComputed="(SELECT id FROM load_type WHERE code = 'CONSTRUCTION_PLANT')"/>
+            <column name="version" valueNumeric="1"/>
+            <column name="active" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'CONSTRUCTION_PLANT' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="1"/>
+            <column name="question_text" value="Give the make and model of the plant."/>
+            <column name="mandatory" valueBoolean="false"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'CONSTRUCTION_PLANT' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="2"/>
+            <column name="question_text" value="Describe any attachments removed for transport."/>
+            <column name="mandatory" valueBoolean="false"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'CONSTRUCTION_PLANT' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="3"/>
+            <column name="question_text" value="Give the name of the site contact at the destination."/>
+            <column name="mandatory" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="ref-003-questions-modular-building" author="koduya" context="reference">
+        <insert tableName="question_set">
+            <column name="load_type_id" valueComputed="(SELECT id FROM load_type WHERE code = 'MODULAR_BUILDING')"/>
+            <column name="version" valueNumeric="1"/>
+            <column name="active" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'MODULAR_BUILDING' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="1"/>
+            <column name="question_text" value="Give the number of modules moving under this application."/>
+            <column name="mandatory" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'MODULAR_BUILDING' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="2"/>
+            <column name="question_text" value="Describe the sheeting or weather protection used on the move."/>
+            <column name="mandatory" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'MODULAR_BUILDING' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="3"/>
+            <column name="question_text" value="Describe any overhanging fixtures such as eaves or balconies."/>
+            <column name="mandatory" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="ref-003-questions-hazardous-bulk" author="koduya" context="reference">
+        <insert tableName="question_set">
+            <column name="load_type_id" valueComputed="(SELECT id FROM load_type WHERE code = 'HAZARDOUS_BULK')"/>
+            <column name="version" valueNumeric="1"/>
+            <column name="active" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'HAZARDOUS_BULK' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="1"/>
+            <column name="question_text" value="Give the proper shipping name of the substance."/>
+            <column name="mandatory" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'HAZARDOUS_BULK' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="2"/>
+            <column name="question_text" value="Give the name and contact number of the dangerous goods safety adviser."/>
+            <column name="mandatory" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'HAZARDOUS_BULK' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="3"/>
+            <column name="question_text" value="Describe the emergency response arrangements for the move."/>
+            <column name="mandatory" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'HAZARDOUS_BULK' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="4"/>
+            <column name="question_text" value="Describe any segregation from other goods on the vehicle."/>
+            <column name="mandatory" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="ref-003-questions-other" author="koduya" context="reference">
+        <insert tableName="question_set">
+            <column name="load_type_id" valueComputed="(SELECT id FROM load_type WHERE code = 'OTHER')"/>
+            <column name="version" valueNumeric="1"/>
+            <column name="active" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'OTHER' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="1"/>
+            <column name="question_text" value="Describe the load and why it cannot be broken down into smaller loads."/>
+            <column name="mandatory" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'OTHER' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="2"/>
+            <column name="question_text" value="Describe the securing arrangements."/>
+            <column name="mandatory" valueBoolean="true"/>
+        </insert>
+        <insert tableName="question">
+            <column name="question_set_id" valueComputed="(SELECT qs.id FROM question_set qs JOIN load_type lt ON lt.id = qs.load_type_id WHERE lt.code = 'OTHER' AND qs.version = 1)"/>
+            <column name="seq" valueNumeric="3"/>
+            <column name="question_text" value="Give any other information the permit officer should know."/>
+            <column name="mandatory" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

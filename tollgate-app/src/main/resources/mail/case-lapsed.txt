@@ -1,0 +1,6 @@
+Subject: Application ${reference} has lapsed
+Dear haulier,
+
+We did not receive your answers to query round ${roundNo} on application ${reference} by ${deadline}, so the application has lapsed. Please submit a new application if you still need to make this move.
+
+Halvern Crossings Permit Office

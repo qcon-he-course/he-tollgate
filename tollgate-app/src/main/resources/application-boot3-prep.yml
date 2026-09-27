@@ -1,0 +1,14 @@
+# Spring Boot 3 upgrade preparation (docs/upgrade-boot3.md). Use together with another profile:
+#   ./mvnw -pl tollgate-app spring-boot:run -Dspring-boot.run.profiles=local,boot3-prep
+# Switches to SecurityFilterChainConfig.
+
+logging:
+  level:
+    org.springframework.security: INFO
+
+spring:
+  mvc:
+    pathmatch:
+      # Boot 3 only supports the path pattern parser. Springfox cannot read these mappings, so the API docs
+      # are empty under this profile until springdoc replaces springfox (item 9 in the checklist).
+      matching-strategy: path_pattern_parser

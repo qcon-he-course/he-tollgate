@@ -1,0 +1,4 @@
+Subject: Case ${reference} listed for the panel on ${sittingDate}
+Case ${reference} is listed for the structures panel sitting on ${sittingDate}.
+
+Tollgate

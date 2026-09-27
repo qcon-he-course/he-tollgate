@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="2019-01-case-file" author="pvenkat">
+        <comment>TG-101 case record for lodged applications</comment>
+        <createTable tableName="case_file">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="reference" type="VARCHAR(20)"><constraints nullable="false" unique="true"/></column>
+            <column name="application_id" type="BIGINT"><constraints nullable="false" unique="true" foreignKeyName="fk_case_file_application" references="movement_application(id)"/></column>
+            <column name="haulier_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_case_file_haulier" references="haulier(id)"/></column>
+            <column name="state" type="VARCHAR(30)"><constraints nullable="false"/></column>
+            <column name="outcome" type="VARCHAR(30)"/>
+            <column name="track" type="VARCHAR(20)"/>
+            <column name="escalated_track" type="VARCHAR(20)"/>
+            <column name="risk_score" type="INTEGER"/>
+            <column name="warnings" type="VARCHAR(200)"/>
+            <column name="assigned_officer" type="VARCHAR(50)"/>
+            <column name="assigned_engineer" type="VARCHAR(50)"/>
+            <column name="officer_comments" type="VARCHAR(2000)"/>
+            <column name="lodged_at" type="TIMESTAMP"><constraints nullable="false"/></column>
+            <column name="decided_at" type="TIMESTAMP"/>
+            <column name="closed_reason" type="VARCHAR(500)"/>
+            <column name="updated_at" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2019-02-assessment" author="thollis">
+        <comment>TG-140 risk assessment</comment>
+        <createTable tableName="assessment">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="case_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_assessment_case" references="case_file(id)"/></column>
+            <column name="score" type="INTEGER"><constraints nullable="false"/></column>
+            <column name="score_track" type="VARCHAR(20)"><constraints nullable="false"/></column>
+            <column name="final_track" type="VARCHAR(20)"><constraints nullable="false"/></column>
+            <column name="assessed_at" type="TIMESTAMP"><constraints nullable="false"/></column>
+            <column name="superseded" type="BOOLEAN" defaultValueBoolean="false"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2019-03-assessment-factor" author="thollis">
+        <comment>TG-140</comment>
+        <createTable tableName="assessment_factor">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="assessment_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_factor_assessment" references="assessment(id)"/></column>
+            <column name="factor" type="VARCHAR(20)"><constraints nullable="false"/></column>
+            <column name="points" type="INTEGER"><constraints nullable="false"/></column>
+            <column name="detail" type="VARCHAR(200)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2019-04-trigger-hit" author="thollis">
+        <comment>TG-141 track triggers</comment>
+        <createTable tableName="trigger_hit">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="assessment_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_trigger_assessment" references="assessment(id)"/></column>
+            <column name="trigger_code" type="VARCHAR(30)"><constraints nullable="false"/></column>
+            <column name="min_track" type="VARCHAR(20)"><constraints nullable="false"/></column>
+            <column name="detail" type="VARCHAR(200)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2019-05-decision" author="pvenkat">
+        <comment>TG-160 decisions</comment>
+        <createTable tableName="decision">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="case_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_decision_case" references="case_file(id)"/></column>
+            <column name="outcome" type="VARCHAR(30)"><constraints nullable="false"/></column>
+            <column name="reason" type="VARCHAR(2000)"/>
+            <column name="decided_by" type="VARCHAR(50)"><constraints nullable="false"/></column>
+            <column name="decided_at" type="TIMESTAMP"><constraints nullable="false"/></column>
+            <column name="panel" type="BOOLEAN" defaultValueBoolean="false"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2019-06-permit-condition" author="pvenkat">
+        <comment>TG-161 permit conditions</comment>
+        <createTable tableName="permit_condition">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="case_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_condition_case" references="case_file(id)"/></column>
+            <column name="permit_id" type="BIGINT"><constraints foreignKeyName="fk_condition_permit" references="permit(id)"/></column>
+            <column name="condition_type" type="VARCHAR(20)"><constraints nullable="false"/></column>
+            <column name="detail" type="VARCHAR(500)"/>
+            <column name="escort_vehicles" type="INTEGER"/>
+            <column name="structure_code" type="VARCHAR(5)"/>
+            <column name="source" type="VARCHAR(20)"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2019-07-engineer-assessment" author="dkerr">
+        <comment>TG-150 engineer assessment</comment>
+        <createTable tableName="engineer_assessment">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="case_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_engineer_assessment_case" references="case_file(id)"/></column>
+            <column name="engineer" type="VARCHAR(50)"><constraints nullable="false"/></column>
+            <column name="recommendation" type="VARCHAR(30)"><constraints nullable="false"/></column>
+            <column name="notes" type="VARCHAR(4000)"/>
+            <column name="proposed_conditions" type="VARCHAR(1000)"/>
+            <column name="recorded_at" type="TIMESTAMP"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2019-08-query-round" author="dkerr">
+        <comment>TG-152 query rounds</comment>
+        <createTable tableName="query_round">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="case_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_query_round_case" references="case_file(id)"/></column>
+            <column name="round_no" type="INTEGER"><constraints nullable="false"/></column>
+            <column name="issued_by" type="VARCHAR(50)"><constraints nullable="false"/></column>
+            <column name="issued_on" type="DATE"><constraints nullable="false"/></column>
+            <column name="deadline" type="DATE"><constraints nullable="false"/></column>
+            <column name="status" type="VARCHAR(20)"><constraints nullable="false"/></column>
+            <column name="answered_at" type="TIMESTAMP"/>
+            <column name="reminder_sent" type="BOOLEAN" defaultValueBoolean="false"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2019-09-query-question" author="dkerr">
+        <comment>TG-152</comment>
+        <createTable tableName="query_question">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="query_round_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_query_question_round" references="query_round(id)"/></column>
+            <column name="seq" type="INTEGER"><constraints nullable="false"/></column>
+            <column name="question_text" type="VARCHAR(1000)"><constraints nullable="false"/></column>
+            <column name="answer_text" type="VARCHAR(2000)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2019-10-panel-sitting" author="dkerr">
+        <comment>TG-170 panel</comment>
+        <createTable tableName="panel_sitting">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="sitting_date" type="DATE"><constraints nullable="false" unique="true"/></column>
+            <column name="status" type="VARCHAR(20)"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2019-11-panel-listing" author="dkerr">
+        <comment>TG-170</comment>
+        <createTable tableName="panel_listing">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="panel_sitting_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_panel_listing_sitting" references="panel_sitting(id)"/></column>
+            <column name="case_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_panel_listing_case" references="case_file(id)"/></column>
+            <column name="listed_at" type="TIMESTAMP"><constraints nullable="false"/></column>
+            <column name="result" type="VARCHAR(20)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2019-12-amendment-request" author="pvenkat">
+        <comment>TG-180 date amendments</comment>
+        <createTable tableName="amendment_request">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="case_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_amendment_case" references="case_file(id)"/></column>
+            <column name="permit_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_amendment_permit" references="permit(id)"/></column>
+            <column name="new_first_move_date" type="DATE"><constraints nullable="false"/></column>
+            <column name="new_last_move_date" type="DATE"><constraints nullable="false"/></column>
+            <column name="status" type="VARCHAR(20)"><constraints nullable="false"/></column>
+            <column name="warnings" type="VARCHAR(200)"/>
+            <column name="requested_by" type="VARCHAR(50)"><constraints nullable="false"/></column>
+            <column name="requested_at" type="TIMESTAMP"><constraints nullable="false"/></column>
+            <column name="decided_by" type="VARCHAR(50)"/>
+            <column name="decided_at" type="TIMESTAMP"/>
+            <column name="reason" type="VARCHAR(500)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2019-13-incident" author="thollis">
+        <comment>TG-142 haulier incidents for scoring</comment>
+        <createTable tableName="incident">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="haulier_id" type="BIGINT"><constraints nullable="false" foreignKeyName="fk_incident_haulier" references="haulier(id)"/></column>
+            <column name="incident_date" type="DATE"><constraints nullable="false"/></column>
+            <column name="description" type="VARCHAR(500)"><constraints nullable="false"/></column>
+            <column name="recorded_by" type="VARCHAR(50)"/>
+            <column name="recorded_at" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2019-14-permit-versions" author="pvenkat">
+        <comment>TG-181 permit versions: one row per version, each with its own movement window</comment>
+        <addColumn tableName="permit">
+            <column name="version" type="INTEGER" defaultValueNumeric="1"><constraints nullable="false"/></column>
+            <column name="window_start" type="DATE"/>
+            <column name="window_end" type="DATE"/>
+            <column name="case_id" type="BIGINT"><constraints foreignKeyName="fk_permit_case" references="case_file(id)"/></column>
+        </addColumn>
+        <sql>
+            UPDATE permit p SET window_start = a.first_move_date, window_end = a.last_move_date
+            FROM movement_application a WHERE a.id = p.application_id;
+        </sql>
+        <addUniqueConstraint tableName="permit" columnNames="reference, version" constraintName="uq_permit_reference_version"/>
+    </changeSet>
+
+    <changeSet id="2019-15-panel-chair" author="dkerr">
+        <comment>TG-171 panel chair flag. Chairs are officers who also chair the panel.</comment>
+        <addColumn tableName="app_user">
+            <column name="is_panel_chair" type="BOOLEAN" defaultValueBoolean="false"><constraints nullable="false"/></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="2019-16-demo-panel-chairs" author="dkerr" context="demo">
+        <update tableName="app_user">
+            <column name="is_panel_chair" valueBoolean="true"/>
+            <where>username IN ('chair1', 'chair2')</where>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>

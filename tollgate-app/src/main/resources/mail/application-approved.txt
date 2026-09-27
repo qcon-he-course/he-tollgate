@@ -1,0 +1,8 @@
+Subject: Permit ${permitReference} issued for application ${reference}
+Dear ${haulierName},
+
+Your application ${reference} has been approved. Permit ${permitReference} is issued for moves on route ${routeCode} between ${firstMoveDate} and ${lastMoveDate}.
+
+The printed permit must be carried on the vehicle for every trip.
+
+Halvern Crossings Permit Office

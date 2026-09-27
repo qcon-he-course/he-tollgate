@@ -1,0 +1,8 @@
+Subject: Application ${reference} received
+Dear ${haulierName},
+
+Halvern Crossings has received your application ${reference} to move an abnormal load on route ${routeCode} between ${firstMoveDate} and ${lastMoveDate}.
+
+We will contact you if we need more information. Please quote ${reference} in all correspondence.
+
+Halvern Crossings Permit Office

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="ref-005-ve-day-2020" author="thollis" context="reference">
+        <comment>TG-233 early May bank holiday 2020 moved to Friday 8 May (VE Day 75th anniversary)</comment>
+        <delete tableName="holiday">
+            <where>holiday_date = '2020-05-04'</where>
+        </delete>
+        <insert tableName="holiday">
+            <column name="holiday_date" valueDate="2020-05-08"/>
+            <column name="description" value="Early May bank holiday (VE Day)"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

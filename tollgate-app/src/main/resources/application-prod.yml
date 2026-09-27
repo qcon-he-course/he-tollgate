@@ -1,0 +1,22 @@
+# Production settings (INC-40288 deployment failed when the environment variables were not set on the new host)
+spring:
+  datasource:
+    url: jdbc:postgresql://pgprod01.halvern.internal:5432/tollgate
+    username: tollgate_app
+    password: Hx-Prod-db-2024!
+  mail:
+    host: smtp.halvern.internal
+    port: 587
+    username: tollgate-notify
+    password: Qf-Smtp-7Rk2-2024
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+logging:
+  level:
+    com.halvern.tollgate: INFO
+
+tollgate:
+  attachments:
+    dir: /var/lib/tollgate/attachments

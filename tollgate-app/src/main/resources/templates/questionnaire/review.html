@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!-- $Id: review.html 1143 2017-11-16 17:20:33Z koduya $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Review')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Answer review <small th:text="${app.reference} + ' - ' + ${app.haulier_name}">HX-A-2017-000001</small></h1>
+    <p>
+        <a class="btn btn-default btn-sm" th:href="@{/applications/{ref}(ref=${app.reference})}">Back to application</a>
+        <a class="btn btn-default btn-sm" th:if="${app.status == 'SUBMITTED'}"
+           th:href="@{/applications/{ref}/questionnaire(ref=${app.reference})}">Enter answers</a>
+    </p>
+    <div class="alert alert-info" id="case-state" style="display:none"></div>
+    <table class="table">
+        <thead><tr><th>#</th><th>Question</th><th>Answer</th><th>Status</th><th>Review</th></tr></thead>
+        <tbody>
+        <tr th:each="q : ${questions}">
+            <td th:text="${q.seq}">1</td>
+            <td><span th:text="${q.questionText}">Question</span>
+                <span class="label label-info" th:if="${q.mandatory}">Required</span></td>
+            <!-- CR-127 --><td th:utext="${@textUtils.nl2br(q.answerText)}">Answer</td>
+            <td><span class="review-status" th:text="${q.reviewStatus}">PENDING</span>
+                <div class="small text-muted" th:if="${q.reviewNote}" th:text="${q.reviewNote}"></div>
+                <div class="small text-muted" th:if="${q.reviewedBy}" th:text="${q.reviewedBy}"></div></td>
+            <td>
+                <div th:if="${q.answered and q.reviewStatus == 'PENDING'}" class="review-buttons">
+                    <form th:action="@{/cases/{ref}/answers/{id}/accept(ref=${app.reference},id=${q.id})}" method="post" class="form-inline review-form"
+                          data-action="accept" th:attr="data-review-url=@{/cases/{ref}/answers/{id}/review(ref=${app.reference},id=${q.id})}">
+                        <input type="text" name="note" class="form-control input-sm" placeholder="Note (optional)"/>
+                        <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                    </form>
+                    <form th:action="@{/cases/{ref}/answers/{id}/return(ref=${app.reference},id=${q.id})}" method="post" class="form-inline review-form"
+                          data-action="return" th:attr="data-review-url=@{/cases/{ref}/answers/{id}/review(ref=${app.reference},id=${q.id})}">
+                        <input type="text" name="note" class="form-control input-sm" placeholder="Reason for the haulier"/>
+                        <button type="submit" class="btn btn-warning btn-sm">Return</button>
+                    </form>
+                </div>
+                <p class="text-danger review-error" style="display:none"></p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+<script th:src="@{/js/review.js}"></script>
+</body>
+</html>

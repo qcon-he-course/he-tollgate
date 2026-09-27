@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!-- $Id: structures.html 1055 2017-09-15 15:12:37Z gferrand $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Structures')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Structures</h1>
+    <input type="text" class="form-control table-filter" data-table="#structures" placeholder="Filter"/>
+    <table id="structures" class="table table-striped table-condensed">
+        <thead>
+        <tr><th>Code</th><th>Name</th><th>Type</th><th class="num">Mass rating (t)</th><th class="num">Clearance (m)</th><th>Estuary</th><th></th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="s : ${structures}">
+            <td th:text="${s.code}">S01</td>
+            <td th:text="${s.name}">Name</td>
+            <td th:text="${s.structureType}">CARRYING</td>
+            <td class="num" th:text="${s.massRatingT}"></td>
+            <td class="num" th:text="${s.clearanceM}"></td>
+            <td th:text="${s.estuary} ? 'Yes' : ''"></td>
+            <td><a th:href="@{/admin/structures/{id}(id=${s.id})}">Edit</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

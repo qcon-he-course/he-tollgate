@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Reports')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Reports <small th:text="${kpis['month']}">2025-03</small></h1>
+    <form class="form-inline" method="get" th:action="@{/reports}">
+        <input type="month" name="month" class="form-control input-sm" th:value="${kpis['month']}"/>
+        <button class="btn btn-default btn-sm" type="submit">Show</button>
+        <a class="btn btn-default btn-sm" th:href="@{/reports/cases.csv}">Export cases (CSV)</a>
+    </form>
+    <div class="row">
+        <div class="col-md-4">
+            <h3>This month</h3>
+            <table class="table table-condensed" id="kpi-closed">
+                <tr><th>Lodged</th><td th:text="${kpis['lodged']}"></td></tr>
+                <tr th:each="e : ${kpis['closed']}"><th th:text="${e.key}"></th><td th:text="${e.value}"></td></tr>
+            </table>
+        </div>
+        <div class="col-md-8">
+            <h3>Decisions by track</h3>
+            <table class="table table-condensed" id="kpi-tracks">
+                <thead><tr><th>Track</th><th>Decided</th><th>Average days</th><th>Within target</th></tr></thead>
+                <tbody>
+                <tr th:each="e : ${kpis['tracks']}">
+                    <td th:text="${e.key}"></td>
+                    <td th:text="${e.value['decided']}"></td>
+                    <td th:text="${e.value['averageDays']} ?: '-'"></td>
+                    <td th:text="${e.value['withinTargetPercent'] != null} ? ${e.value['withinTargetPercent']} + '% of ' + ${e.value['target']} + ' days' : '-'"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <h3>Open by track</h3>
+            <table class="table table-condensed"><tr th:each="e : ${byTrack}"><th th:text="${e.key}"></th><td th:text="${e.value}"></td></tr></table>
+            <h3>Open by age</h3>
+            <table class="table table-condensed"><tr th:each="e : ${ages}"><th th:text="${e.key}"></th><td th:text="${e.value}"></td></tr></table>
+            <h3>Outcomes, last 12 months</h3>
+            <table class="table table-condensed"><tr th:each="e : ${byOutcome}"><th th:text="${e.key}"></th><td th:text="${e.value}"></td></tr></table>
+            <h3>Open by officer</h3>
+            <table class="table table-condensed"><tr th:each="e : ${kpis['openByOfficer']}"><th th:text="${e.key}"></th><td th:text="${e.value}"></td></tr></table>
+        </div>
+        <div class="col-md-8">
+            <h3>Moves in the next 10 days not yet decided</h3>
+            <table class="table table-condensed" id="due-soon">
+                <tr th:each="r : ${dueSoon}">
+                    <td><a th:href="@{/cases/{ref}(ref=${r['reference']})}" th:text="${r['reference']}"></a></td>
+                    <td th:text="${r['haulier']}"></td><td th:text="${r['stateLabel']}"></td>
+                    <td th:text="${r['daysToMove']} + ' days'"></td><td th:text="${r['assigned_officer']}"></td>
+                </tr>
+            </table>
+            <h3>Query rounds past their deadline</h3>
+            <table class="table table-condensed">
+                <tr th:each="r : ${overdue}">
+                    <td><a th:href="@{/cases/{ref}(ref=${r['reference']})}" th:text="${r['reference']}"></a></td>
+                    <td th:text="'Round ' + ${r['round_no']}"></td><td th:text="${r['deadline']}"></td>
+                </tr>
+            </table>
+            <h3>No change for over 10 days</h3>
+            <p th:text="${stale.size()} + ' open cases'"></p>
+            <h3>Recent activity</h3>
+            <table class="table table-condensed">
+                <tr th:each="a : ${activity}">
+                    <td th:text="${a['created_at']}"></td>
+                    <td><a th:href="@{/cases/{ref}(ref=${a['reference']})}" th:text="${a['reference']}"></a></td>
+                    <td th:text="${a['stateLabel']}"></td><td th:text="${a['actor']}"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <form class="form-inline" method="post" th:action="@{/reports/digest}">
+        <label>Email these figures to</label>
+        <input type="email" name="to" class="form-control input-sm"/>
+        <button class="btn btn-default btn-sm" type="submit">Send</button>
+    </form>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

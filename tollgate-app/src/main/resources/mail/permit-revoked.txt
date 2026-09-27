@@ -1,0 +1,8 @@
+Subject: Permit ${permitReference} revoked
+Dear haulier,
+
+Permit ${permitReference} has been revoked and can no longer be used.
+
+Reason: ${reason}
+
+Halvern Crossings Permit Office

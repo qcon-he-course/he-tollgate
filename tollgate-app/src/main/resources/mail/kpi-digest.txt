@@ -1,0 +1,6 @@
+Subject: Tollgate figures for ${month}
+Figures for ${month} so far:
+
+${figures}
+
+Halvern Crossings Permit Office

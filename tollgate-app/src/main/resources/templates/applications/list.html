@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!-- $Id: list.html 1118 2017-11-01 12:05:44Z gferrand $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Applications')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Applications</h1>
+    <p><a class="btn btn-primary" th:href="@{/applications/new}">New application</a></p>
+    <input type="text" class="form-control table-filter" data-table="#applications" placeholder="Filter"/>
+    <table id="applications" class="table table-striped table-condensed">
+        <thead><tr><th>Reference</th><th>Haulier</th><th>Load type</th><th>Route</th><th>First move</th><th>Status</th></tr></thead>
+        <tbody>
+        <tr th:each="a : ${applications}">
+            <td><a th:href="@{/applications/{ref}(ref=${a.reference})}" th:text="${a.reference}">HX-A-2017-000001</a></td>
+            <td th:text="${a.haulierName}"></td>
+            <td th:text="${a.loadTypeCode}"></td>
+            <td th:text="${a.routeCode}"></td>
+            <td th:text="${a.firstMoveDate != null} ? ${#dates.format(a.firstMoveDate, 'dd/MM/yyyy')} : ''"></td>
+            <td th:text="${a.status}">DRAFT</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Haulier history')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <h1 th:text="${history['haulier'].name}">Haulier</h1>
+    <p><span th:each="e : ${history['casesByState']}" class="label label-default" style="margin-right:4px" th:text="${e.key} + ': ' + ${e.value}"></span></p>
+    <h3>Incidents</h3>
+    <table class="table table-condensed"><tr th:each="i : ${history['incidents']}"><td th:text="${i['incident_date']}"></td><td th:text="${i['description']}"></td></tr></table>
+    <h3>Cases</h3>
+    <table class="table table-condensed" id="haulier-cases">
+        <tr th:each="c : ${history['cases']}">
+            <td><a th:href="@{/cases/{ref}(ref=${c['reference']})}" th:text="${c['reference']}"></a></td>
+            <td th:text="${c['state']}"></td><td th:text="${c['outcome']}"></td><td th:text="${c['track']}"></td>
+        </tr>
+    </table>
+    <h3>Permits</h3>
+    <table class="table table-condensed">
+        <tr th:each="p : ${history['permits']}">
+            <td th:text="${p['reference']} + ' v' + ${p['version']}"></td><td th:text="${p['status']}"></td>
+            <td th:text="${p['window_start']} + ' to ' + ${p['window_end']}"></td>
+        </tr>
+    </table>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

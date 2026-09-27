@@ -1,0 +1,10 @@
+Subject: Application ${reference}: questions from the permit office (round ${roundNo})
+Dear haulier,
+
+The permit office needs more information about application ${reference}:
+
+${questions}
+
+Please reply by ${deadline}, quoting ${reference}. If we have no answer by the end of that day the application will lapse.
+
+Halvern Crossings Permit Office

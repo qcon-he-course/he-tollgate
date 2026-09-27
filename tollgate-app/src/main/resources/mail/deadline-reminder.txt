@@ -1,0 +1,6 @@
+Subject: Application ${reference}: answers due ${deadline}
+Dear haulier,
+
+This is a reminder that your answers to query round ${roundNo} on application ${reference} are due by the end of ${deadline}.
+
+Halvern Crossings Permit Office

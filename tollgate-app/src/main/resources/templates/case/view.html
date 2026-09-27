@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/layout :: head('Case')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1><span th:text="${caseFile.reference}">HX-A-2019-000001</span>
+        <span class="label" th:text="${caseFile.state}"
+              th:classappend="${caseFile.state == 'AWAITING_HAULIER' or caseFile.state == 'AWAITING_PANEL'} ? 'label-warning' : (${caseFile.state == 'DECIDED'} ? 'label-success' : (${caseFile.state == 'LAPSED' or caseFile.state == 'CANCELLED' or caseFile.state == 'WITHDRAWN'} ? 'label-default' : 'label-primary'))">IN_REVIEW</span>
+        <span class="label" th:classappend="${T(com.halvern.tollgate.platform.util.TrackUtils).badge(caseFile.track)}"
+              th:text="${T(com.halvern.tollgate.platform.util.TrackUtils).label(caseFile.track)}">Desk</span>
+        <span class="label label-success" th:if="${caseFile.outcome != null}" th:text="${caseFile.outcome}">ISSUED</span></h1>
+    <p><strong th:text="${haulierName}">Haulier</strong> &middot;
+        <a th:href="@{/applications/{ref}(ref=${caseFile.reference})}">Application details</a> &middot;
+        <a th:href="@{/applications/{ref}/review(ref=${caseFile.reference})}">Questionnaire</a> &middot;
+        <a th:href="@{/cases/{ref}/text(ref=${caseFile.reference})}">Copy as text</a> &middot;
+        <a th:href="@{/reports/hauliers/{id}(id=${caseFile.haulierId})}">Haulier history</a></p>
+    <div class="alert alert-info" th:if="${caseFile.state == 'LODGED'}">Waiting for the questionnaire answers to be accepted.</div>
+    <div class="alert alert-info" th:if="${caseFile.state == 'AWAITING_HAULIER'}">Waiting for the haulier's answers.</div>
+    <div class="alert alert-info" th:if="${caseFile.state == 'AWAITING_PANEL'}">Listed for the structures panel. See the <a th:href="@{/panel}">panel page</a>.</div>
+    <div class="alert alert-danger" th:if="${caseFile.state == 'LAPSED'}">The haulier did not answer in time. This case has lapsed.</div>
+    <!-- CR-178 INC-40412 -->
+    <div class="alert alert-info" th:unless="${#lists.isEmpty(tasks)}" id="tasks">To do:
+        <span th:each="t, s : ${tasks}" th:text="${t} + (${s.last} ? '' : '; ')">Decide</span></div>
+    <div class="alert alert-warning" th:unless="${#lists.isEmpty(duplicates)}">Possible duplicates:
+        <a th:each="d : ${duplicates}" th:href="@{/cases/{ref}(ref=${d})}" th:text="${d} + ' '"></a></div>
+    <div class="alert alert-warning" th:unless="${#lists.isEmpty(warnings)}">
+        Warnings: <span th:each="w, s : ${warnings}" th:text="${w} + (${s.last} ? '' : ', ')">SHORT_NOTICE</span></div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Case</h3>
+            <table class="table table-condensed">
+                <tr><th>Load</th><td th:text="${app.loadTypeCode} + ', ' + ${app.grossMassKg} + ' kg, ' + ${app.widthM} + ' x ' + ${app.lengthM} + ' x ' + ${app.heightM} + ' m'"></td></tr>
+                <!-- CR-127 show the haulier's description with its line breaks -->
+                <tr><th>Description</th><td th:utext="${@textUtils.nl2br(app.loadDescription)}"></td></tr>
+                <tr><th>Route</th><td th:text="${app.routeCode}"></td></tr>
+                <tr><th>Movement dates</th><td th:text="${#dates.format(app.firstMoveDate, 'dd/MM/yyyy')} + ' to ' + ${#dates.format(app.lastMoveDate, 'dd/MM/yyyy')}"></td></tr>
+                <tr><th>Lodged</th><td th:text="${#temporals.format(caseFile.lodgedAt, 'dd/MM/yyyy HH:mm')}"></td></tr>
+                <tr><th>Officer</th><td>
+                    <span th:text="${caseFile.assignedOfficer}"></span>
+                    <form th:unless="${terminal}" th:action="@{/cases/{ref}/officer(ref=${caseFile.reference})}" method="post" class="form-inline">
+                        <select name="officer" class="form-control input-sm">
+                            <option th:each="o : ${officers}" th:value="${o.username}" th:text="${o.fullName}"></option>
+                        </select>
+                        <button type="submit" class="btn btn-default btn-xs">Assign</button>
+                    </form></td></tr>
+                <tr><th>Engineer</th><td>
+                    <span th:text="${caseFile.assignedEngineer}"></span>
+                    <form th:if="${T(com.halvern.tollgate.platform.util.TrackUtils).needsEngineer(caseFile.track) and !terminal}"
+                          th:action="@{/cases/{ref}/engineer(ref=${caseFile.reference})}" method="post" class="form-inline">
+                        <select name="engineer" class="form-control input-sm">
+                            <option th:each="e : ${engineers}" th:value="${e.username}" th:text="${e.fullName}"></option>
+                        </select>
+                        <button type="submit" class="btn btn-default btn-xs">Assign engineer</button>
+                    </form></td></tr>
+            </table>
+            <form th:action="@{/cases/{ref}/comments(ref=${caseFile.reference})}" method="post">
+                <label for="comments">Officer comments</label>
+                <textarea class="form-control" rows="2" id="comments" name="comments" th:text="${caseFile.officerComments}"></textarea>
+                <button type="submit" class="btn btn-default btn-xs">Save comments</button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <h3>Assessment</h3>
+            <p th:if="${assessment == null}" class="text-muted">Not assessed yet.</p>
+            <div th:if="${assessment != null}">
+                <p>Score <strong th:text="${assessment.score}">20</strong>: score track
+                    <span th:text="${assessment.scoreTrack}"></span>, final track <span th:text="${assessment.finalTrack}"></span>
+                    <span th:if="${caseFile.escalatedTrack != null}" th:text="'(escalated to ' + ${caseFile.escalatedTrack} + ')'"></span></p>
+                <table class="table table-condensed">
+                    <tr th:each="f : ${assessment.factors}"><td th:text="${f.factor}"></td><td th:text="${f.points}"></td><td class="small" th:text="${f.detail}"></td></tr>
+                </table>
+                <p th:unless="${#lists.isEmpty(triggers)}">Triggers:
+                    <span class="label label-warning" th:each="t : ${triggers}" th:text="${t.triggerCode} + ' &rarr; ' + ${t.minTrack}"></span></p>
+            </div>
+            <form th:if="${canEscalate}" th:action="@{/cases/{ref}/escalate(ref=${caseFile.reference})}" method="post" class="form-inline">
+                <input type="text" name="reason" class="form-control input-sm" placeholder="Reason"/>
+                <button type="submit" class="btn btn-default btn-sm">Escalate one track</button>
+            </form>
+            <form th:if="${canReassess}" th:action="@{/cases/{ref}/reassess(ref=${caseFile.reference})}" method="post">
+                <button type="submit" class="btn btn-default btn-sm">Return for reassessment</button>
+            </form>
+        </div>
+    </div>
+
+    <h3>Query rounds</h3>
+    <div th:each="r : ${caseFile.queryRounds}" class="panel panel-default">
+        <div class="panel-heading">Round <span th:text="${r.roundNo}"></span> &middot; issued
+            <span th:text="${#temporals.format(r.issuedOn, 'dd/MM/yyyy')}"></span> by <span th:text="${r.issuedBy}"></span>
+            &middot; due <strong th:text="${#temporals.format(r.deadline, 'dd/MM/yyyy')}"></strong>
+            <span class="label label-default" th:text="${r.status}">OPEN</span></div>
+        <div class="panel-body">
+            <form th:action="@{/cases/{ref}/query-rounds/{n}/answers(ref=${caseFile.reference},n=${r.roundNo})}" method="post">
+                <div th:each="q : ${r.questions}">
+                    <p><strong th:text="${q.seq} + '. ' + ${q.questionText}"></strong></p>
+                    <p th:if="${q.answerText != null}" th:utext="${@textUtils.nl2br(q.answerText)}"></p>
+                    <textarea th:if="${r.status == 'OPEN'}" name="answers" class="form-control" rows="2"></textarea>
+                </div>
+                <button th:if="${r.status == 'OPEN'}" type="submit" class="btn btn-default btn-sm">Record haulier's answers</button>
+            </form>
+        </div>
+    </div>
+    <!-- CR-125 query rounds are issued by the case officer -->
+    <form th:if="${canIssueQueryRound}" sec:authorize="hasRole('OFFICER')" th:action="@{/cases/{ref}/query-rounds(ref=${caseFile.reference})}" method="post">
+        <label>New query round (one question per box)</label>
+        <input type="text" name="questions" class="form-control input-sm"/>
+        <input type="text" name="questions" class="form-control input-sm"/>
+        <input type="text" name="questions" class="form-control input-sm"/>
+        <button type="submit" class="btn btn-default btn-sm">Issue query round</button>
+    </form>
+
+    <h3>Engineer assessment</h3>
+    <p th:if="${engineerAssessment != null}">
+        <strong th:text="${engineerAssessment.recommendation}">SATISFACTORY</strong> by
+        <span th:text="${engineerAssessment.engineer}"></span>
+        <br/><span th:text="${engineerAssessment.notes}"></span>
+        <br/><em th:if="${engineerAssessment.proposedConditions}" th:text="'Proposed conditions: ' + ${engineerAssessment.proposedConditions}"></em></p>
+    <form th:if="${canRecordEngineerAssessment and T(com.halvern.tollgate.platform.util.TrackUtils).needsEngineer(caseFile.track)}"
+          th:action="@{/cases/{ref}/engineer-assessment(ref=${caseFile.reference})}" method="post">
+        <select name="recommendation" class="form-control input-sm">
+            <option value="SATISFACTORY">Satisfactory</option>
+            <option value="SATISFACTORY_WITH_CONDITIONS">Satisfactory with conditions</option>
+            <option value="REFER_TO_PANEL">Refer to panel</option>
+            <option value="UNSATISFACTORY">Unsatisfactory</option>
+        </select>
+        <textarea name="notes" class="form-control" rows="2" placeholder="Engineer notes"></textarea>
+        <input type="text" name="proposedConditions" class="form-control input-sm" placeholder="Proposed conditions"/>
+        <button type="submit" class="btn btn-default btn-sm">Record engineer assessment</button>
+    </form>
+
+    <div th:if="${canDecide or canRecordPanelDecision}">
+        <h3 th:text="${canRecordPanelDecision} ? 'Panel decision' : 'Decision'">Decision</h3>
+        <form th:action="${canRecordPanelDecision} ? @{/cases/{ref}/panel-decision(ref=${caseFile.reference})} : @{/cases/{ref}/decision(ref=${caseFile.reference})}"
+              method="post">
+            <div class="radio" th:if="${canRecordPanelDecision}">
+                <label><input type="radio" name="action" value="ISSUE" checked="checked"/> Issue</label>
+                <label><input type="radio" name="action" value="REFUSE"/> Refuse</label>
+                <label><input type="radio" name="action" value="DEFER"/> Defer to next sitting</label>
+            </div>
+            <div class="radio" th:unless="${canRecordPanelDecision}">
+                <label><input type="radio" name="outcome" value="ISSUE" checked="checked"/> Issue</label>
+                <label><input type="radio" name="outcome" value="REFUSE"/> Refuse</label>
+            </div>
+            <p class="text-muted small">Mandatory conditions are added automatically. Add any further conditions here.</p>
+            <div class="form-inline" th:each="i : ${#numbers.sequence(1, 3)}">
+                <select name="conditionType" class="form-control input-sm">
+                    <option value="">-- none --</option>
+                    <option th:each="t : ${conditionTypes}" th:value="${t}" th:text="${t}"></option>
+                </select>
+                <input type="text" name="conditionDetail" class="form-control input-sm" size="60" placeholder="Detail"/>
+            </div>
+            <textarea name="reason" class="form-control" rows="2" placeholder="Reason (required to refuse)"></textarea>
+            <button type="submit" class="btn btn-primary">Record decision</button>
+        </form>
+    </div>
+
+    <div th:if="${permit != null}">
+        <h3>Permit <span th:text="${permit.reference}"></span>
+            <span class="label label-default" th:text="${permit.status}">ACTIVE</span></h3>
+        <table class="table table-condensed">
+            <thead><tr><th>Version</th><th>Window</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="v : ${permitVersions}">
+                <td th:text="${v.version}">1</td>
+                <td th:text="${#temporals.format(v.windowStart, 'dd/MM/yyyy')} + ' to ' + ${#temporals.format(v.windowEnd, 'dd/MM/yyyy')}"></td>
+                <td th:text="${v.status}"></td>
+                <td><a th:if="${v.id == permit.id}" th:href="@{/permits/{ref}/document(ref=${v.reference})}">Printed permit</a></td>
+            </tr>
+            </tbody>
+        </table>
+        <ul><li th:each="c : ${conditions}" th:text="${c.conditionType} + ': ' + ${c.detail}"></li></ul>
+        <!-- CR-168 INC-40250 -->
+        <form th:if="${canRevoke}" th:action="@{/cases/{ref}/reprint(ref=${caseFile.reference})}" method="post" class="inline">
+            <button type="submit" class="btn btn-default btn-xs">Reprint permit</button>
+        </form>
+        <form th:if="${caseFile.state == 'DECIDED'}" th:action="@{/cases/{ref}/resend-decision(ref=${caseFile.reference})}" method="post" class="inline">
+            <button type="submit" class="btn btn-default btn-xs">Resend decision email</button>
+        </form>
+        <!-- CR-122 revoke with a normal form post, the modal did not work on the office laptops -->
+        <form th:if="${canRevoke}" sec:authorize="hasRole('OFFICER')" th:action="@{/cases/{ref}/permit/revoke(ref=${caseFile.reference})}"
+              method="post" class="form-inline" id="revoke-form-post">
+            <input type="text" name="reason" class="form-control input-sm" placeholder="Reason for revoking"/>
+            <button type="submit" class="btn btn-danger btn-sm">Revoke permit</button>
+        </form>
+        <form th:if="${canRevoke}" th:action="@{/permits/{ref}/amendments(ref=${permit.reference})}" method="post" class="form-inline">
+            <label>New dates</label>
+            <input type="date" name="newFirstMoveDate" class="form-control input-sm"/>
+            <input type="date" name="newLastMoveDate" class="form-control input-sm"/>
+            <button type="submit" class="btn btn-default btn-sm">Request amendment</button>
+        </form>
+        <table class="table table-condensed" th:unless="${#lists.isEmpty(amendments)}">
+            <thead><tr><th>Amendment</th><th>New dates</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="a : ${amendments}">
+                <td th:text="${a.id}"></td>
+                <td th:text="${a.newFirstMoveDate} + ' to ' + ${a.newLastMoveDate}"></td>
+                <td th:text="${a.status}"></td>
+                <td th:if="${a.status == 'REQUESTED'}">
+                    <form th:action="@{/amendments/{id}/approve(id=${a.id})}" method="post" class="inline">
+                        <input type="hidden" name="permitReference" th:value="${permit.reference}"/>
+                        <button type="submit" class="btn btn-success btn-xs">Approve</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:unless="${terminal}" class="well well-sm">
+        <form th:action="@{/cases/{ref}/withdraw(ref=${caseFile.reference})}" method="post" class="form-inline inline">
+            <input type="text" name="reason" class="form-control input-sm" placeholder="Haulier's reason"/>
+            <button type="submit" class="btn btn-default btn-sm">Withdraw (haulier request)</button>
+        </form>
+        <form th:action="@{/cases/{ref}/cancel(ref=${caseFile.reference})}" method="post" class="form-inline inline">
+            <input type="text" name="reason" class="form-control input-sm" placeholder="Reason"/>
+            <button type="submit" class="btn btn-warning btn-sm">Cancel case</button>
+        </form>
+    </div>
+
+    <h3>History</h3>
+    <table class="table table-condensed" id="history">
+        <thead><tr><th>When</th><th>Reference</th><th>From</th><th>To</th><th>By</th><th>Reason</th></tr></thead>
+        <tbody>
+        <tr th:each="h : ${timeline}">
+            <td th:text="${#temporals.format(h.at, 'dd/MM/yyyy HH:mm')}"></td>
+            <td th:text="${h.reference}"></td>
+            <td th:text="${h.oldState}"></td>
+            <td th:text="${h.newState}"></td>
+            <td th:text="${h.actor}"></td>
+            <td th:text="${h.reason}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <h3>Emails</h3>
+    <table class="table table-condensed" id="emails">
+        <tbody>
+        <tr th:each="n : ${notifications}" th:classappend="${n.status == 'FAILED'} ? 'danger' : ''">
+            <td th:text="${#dates.format(n.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+            <td th:text="${n.recipient}"></td>
+            <td th:text="${n.subject}"></td>
+            <td th:text="${n.status}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

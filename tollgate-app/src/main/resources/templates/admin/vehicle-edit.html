@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<!-- $Id: vehicle-edit.html 1064 2017-09-22 10:15:52Z rmistry $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Vehicle')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1><span th:text="${vehicle != null} ? 'Vehicle ' + ${vehicle.registration} : 'New vehicle'">Vehicle</span>
+        <small th:text="${haulier.name}">Haulier</small></h1>
+    <form th:action="${vehicle != null} ? @{/admin/vehicles/{id}(id=${vehicle.id})} : @{/admin/hauliers/{id}/vehicles/new(id=${haulier.id})}"
+          th:object="${vehicleForm}" method="post" class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="registration">Registration</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" th:field="*{registration}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('registration')}" th:errors="*{registration}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="category">Category</label>
+            <div class="col-sm-3">
+                <select class="form-control" th:field="*{category}">
+                    <option value="">-- choose --</option>
+                    <option th:each="c : ${categories}" th:value="${c}" th:text="${c}">LOW_LOADER</option>
+                </select>
+                <span class="field-error" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-3">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a class="btn btn-default" th:href="@{/admin/hauliers/{id}(id=${haulier.id})}">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

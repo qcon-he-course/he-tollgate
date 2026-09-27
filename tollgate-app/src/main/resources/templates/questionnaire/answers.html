@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!-- $Id: answers.html 1141 2017-11-16 11:39:58Z koduya $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Answers')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Questionnaire <small th:text="${app.reference} + ' - ' + ${app.haulier_name}">HX-A-2017-000001</small></h1>
+    <p class="text-muted">Enter the haulier's answers from their form. Accepted answers cannot be changed.</p>
+    <form th:action="@{/cases/{ref}/answers(ref=${app.reference})}" th:object="${answerForm}" method="post">
+        <div class="panel panel-default" th:each="q, stat : ${questions}">
+            <div class="panel-heading">
+                <strong th:text="${q.seq} + '. '">1.</strong><span th:text="${q.questionText}">Question</span>
+                <span class="label label-info" th:if="${q.mandatory}">Required</span>
+                <span class="label label-default" th:text="${q.reviewStatus}">PENDING</span>
+            </div>
+            <div class="panel-body">
+                <input type="hidden" th:field="*{caseQuestionIds[__${stat.index}__]}"/>
+                <p class="text-danger" th:if="${q.reviewStatus == 'RETURNED'}">
+                    Returned: <span th:text="${q.reviewNote}">note</span></p>
+                <textarea class="form-control" rows="3" maxlength="2000" th:field="*{answers[__${stat.index}__]}"
+                          th:readonly="${!q.editable}"></textarea>
+            </div>
+        </div>
+        <p th:if="${#lists.isEmpty(questions)}">This application has no questions.</p>
+        <button type="submit" class="btn btn-primary">Save answers</button>
+        <a class="btn btn-default" th:href="@{/applications/{ref}(ref=${app.reference})}">Back</a>
+    </form>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

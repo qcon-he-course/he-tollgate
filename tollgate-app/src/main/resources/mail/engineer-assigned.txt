@@ -1,0 +1,6 @@
+Subject: Case ${reference} assigned to you
+${engineer},
+
+Case ${reference} has been assigned to you for an engineer assessment. It is in Tollgate under Applications.
+
+Tollgate

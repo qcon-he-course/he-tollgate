@@ -1,0 +1,83 @@
+/*
+ * Tollgate - Abnormal Load Permit System
+ * Copyright (c) 2017 Pellowe Tarn Systems Ltd. All rights reserved.
+ * $Id: tollgate.css 1049 2017-09-13 14:11:02Z koduya $
+ */
+
+/* Halvern Crossings house colours (brand guide v3) */
+body {
+    padding-bottom: 20px;
+    font-size: 13px;
+    background: #f4f6f8;
+    color: #26323d;
+}
+.container { background: #fff; }
+body > div.container { padding-top: 6px; padding-bottom: 10px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06); }
+
+/* Navigation bar */
+.navbar-default {
+    background: #0b3d5c;
+    border: 0;
+    border-bottom: 3px solid #f0a500;
+    border-radius: 0;
+    margin-bottom: 18px;
+}
+.navbar-default .container { background: transparent; box-shadow: none; }
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus { color: #fff; font-weight: bold; letter-spacing: 0.5px; }
+.navbar-default .navbar-nav > li > a { color: #d5e3ec; padding-left: 10px; padding-right: 10px; }
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus,
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus { color: #fff; background: #125277; }
+.navbar-default .navbar-nav > li > a .caret { border-top-color: #d5e3ec; }
+.navbar-default .navbar-text { color: #d5e3ec; margin-right: 8px; }
+.navbar-default .navbar-form .btn { background: transparent; color: #fff; border-color: #6d93ac; }
+.navbar-default .navbar-form .btn:hover { background: #125277; }
+
+/* Headings */
+h1 { font-size: 24px; margin: 10px 0 12px; font-weight: 600; }
+h1 small { font-size: 60%; }
+h1 .label { font-size: 45%; vertical-align: middle; position: relative; top: -2px; }
+h2 { font-size: 19px; }
+h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 22px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e3e8ec;
+    color: #0b3d5c;
+}
+
+/* Tables */
+.table { margin-bottom: 14px; }
+.table > thead > tr > th {
+    background: #eef2f5;
+    color: #4a5a68;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    border-bottom: 1px solid #d6dde3;
+}
+.table > tbody > tr:hover > td { background-color: #f7fafc; }
+.table-condensed > tbody > tr > td,
+.table-condensed > tbody > tr > th { padding: 5px 6px; }
+
+/* Messages and labels */
+.alert { padding: 9px 12px; margin-bottom: 10px; }
+.label { font-weight: 600; letter-spacing: 0.3px; }
+.label-default { background-color: #7b8a97; }
+
+/* Forms */
+.form-control { font-size: 13px; }
+.form-inline .form-control { margin-right: 4px; }
+.btn { font-size: 13px; }
+.well { background: #f7f9fa; }
+
+body > .tg-footer { margin-top: 30px; background: transparent; box-shadow: none; }
+.table-filter { max-width: 300px; margin-bottom: 10px; }
+.field-error { color: #a94442; font-size: 12px; }
+td.num, th.num { text-align: right; }
+form.inline { display: inline; }

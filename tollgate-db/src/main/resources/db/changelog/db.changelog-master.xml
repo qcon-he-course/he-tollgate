@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <!--
+        Tollgate - Abnormal Load Permit System
+        Copyright (c) 2017 Pellowe Tarn Systems Ltd. All rights reserved.
+        Developed under contract PT-HX-0412 for Halvern Crossings plc.
+
+        Master changelog. Apply with the tollgate_owner account.
+        Contexts: "reference" for network and calendar data, "demo" for test users and hauliers.
+    -->
+
+    <include file="db/changelog/2017/001-grants.xml"/>
+    <include file="db/changelog/2017/002-reference-schema.xml"/>
+    <include file="db/changelog/2017/003-party-schema.xml"/>
+    <include file="db/changelog/2017/004-application-schema.xml"/>
+    <include file="db/changelog/2017/005-questionnaire-schema.xml"/>
+    <include file="db/changelog/2017/006-permit-schema.xml"/>
+    <include file="db/changelog/2017/007-audit-schema.xml"/>
+    <include file="db/changelog/2017/008-audit-append-only.xml"/>
+
+    <include file="db/changelog/reference/001-network.xml"/>
+    <include file="db/changelog/reference/002-load-types.xml"/>
+    <include file="db/changelog/reference/003-question-sets.xml"/>
+    <include file="db/changelog/reference/004-holidays.xml"/>
+
+    <include file="db/changelog/2017/100-demo-staff.xml"/>
+    <include file="db/changelog/2017/101-demo-hauliers.xml"/>
+
+    <include file="db/changelog/2019/2019-changes.xml"/>
+    <include file="db/changelog/reference/005-holidays-2020-ve-day.xml"/>
+
+    <include file="db/changelog/2021/2021-changes.xml"/>
+
+    <include file="db/changelog/2022/2022-changes.xml"/>
+    <include file="db/changelog/reference/006-holidays-2022-2023.xml"/>
+
+    <include file="db/changelog/2024/2024-changes.xml"/>
+
+</databaseChangeLog>

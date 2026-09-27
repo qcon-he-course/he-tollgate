@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<!-- $Id: view.html 1121 2017-11-03 09:44:30Z gferrand $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Application')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <div class="alert alert-danger" th:if="${failures}">
+        <strong>The application cannot be lodged:</strong>
+        <ul><li th:each="f : ${failures}" th:text="${f}">Failure</li></ul>
+    </div>
+    <h1><span th:text="${app.reference}">HX-A-2017-000001</span>
+        <span class="label label-default" th:text="${app.status}">DRAFT</span></h1>
+    <p th:if="${app.draft}">
+        <a class="btn btn-default" th:href="@{/applications/{ref}/edit(ref=${app.reference})}">Edit</a>
+    </p>
+    <p th:if="${app.status == 'SUBMITTED'}">
+        <a class="btn btn-default" th:href="@{/applications/{ref}/questionnaire(ref=${app.reference})}">Enter answers</a>
+        <a class="btn btn-default" th:href="@{/applications/{ref}/review(ref=${app.reference})}">Review answers</a>
+    </p>
+    <p th:if="${app.status != 'DRAFT'}">
+        <a class="btn btn-primary" th:href="@{/cases/{ref}(ref=${app.reference})}">Open case</a>
+        <a class="btn btn-default" th:if="${app.status == 'APPROVED'}" th:href="@{/permits(application=${app.reference})}">View permit</a>
+    </p>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Details</h3>
+            <table class="table table-condensed">
+                <tr><th>Haulier</th><td th:text="${app.haulierName}"></td></tr>
+                <tr><th>Vehicle</th><td th:text="${app.vehicleRegistration != null} ? ${app.vehicleRegistration} + ' (' + ${app.vehicleCategory} + ')' : ''"></td></tr>
+                <tr><th>Load type</th><td th:text="${app.loadTypeCode}"></td></tr>
+                <tr><th>Description</th><td th:text="${app.loadDescription}"></td></tr>
+                <tr><th>Gross mass</th><td th:text="${app.grossMassKg != null} ? ${app.grossMassKg} + ' kg' : ''"></td></tr>
+                <tr><th>Width x length x height</th>
+                    <td th:text="${app.widthM} + ' x ' + ${app.lengthM} + ' x ' + ${app.heightM} + ' m'"></td></tr>
+                <tr><th>Hazardous</th><td th:text="${app.hazardous} ? 'Yes, UN ' + ${app.unNumber} : 'No'"></td></tr>
+                <tr><th>Route</th><td th:text="${app.routeCode}"></td></tr>
+                <tr><th>Movement dates</th>
+                    <td th:text="${app.firstMoveDate != null} ? ${#dates.format(app.firstMoveDate, 'dd/MM/yyyy')} + ' to ' + ${#dates.format(app.lastMoveDate, 'dd/MM/yyyy')} : ''"></td></tr>
+                <tr><th>Created</th><td th:text="${app.createdBy} + ', ' + ${#dates.format(app.createdAt, 'dd/MM/yyyy HH:mm')}"></td></tr>
+                <tr th:if="${app.lodgedAt != null}"><th>Lodged</th>
+                    <td th:text="${app.lodgedBy} + ', ' + ${#dates.format(app.lodgedAt, 'dd/MM/yyyy HH:mm')}"></td></tr>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h3>Trips</h3>
+            <table class="table table-condensed">
+                <thead><tr><th>#</th><th>Departure</th><th>Estuary crossing</th></tr></thead>
+                <tbody>
+                <tr th:each="t : ${app.trips}">
+                    <td th:text="${t.tripNo}">1</td>
+                    <td th:text="${#dates.format(t.departureAt, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${t.crossingAt != null} ? ${#dates.format(t.crossingAt, 'dd/MM/yyyy HH:mm')} : ''"></td>
+                </tr>
+                </tbody>
+            </table>
+            <h3>Attachments</h3>
+            <table class="table table-condensed">
+                <tbody>
+                <tr th:each="att : ${app.attachments}">
+                    <td><a th:href="@{/applications/{ref}/attachments/{id}(ref=${app.reference},id=${att.id})}"
+                           th:text="${att.fileName}">plan.pdf</a></td>
+                    <td th:text="${att.attachmentType}">ESCORT_PLAN</td>
+                    <td th:text="${att.sizeBytes / 1024} + ' KB'"></td>
+                </tr>
+                </tbody>
+            </table>
+            <form th:if="${app.draft}" th:action="@{/applications/{ref}/attachments(ref=${app.reference})}"
+                  method="post" enctype="multipart/form-data" class="form-inline">
+                <select name="type" class="form-control input-sm">
+                    <option th:each="t : ${attachmentTypes}" th:value="${t}" th:text="${t}">OTHER</option>
+                </select>
+                <input type="file" name="file" accept="application/pdf" class="form-control input-sm"/>
+                <button type="submit" class="btn btn-default btn-sm">Attach</button>
+            </form>
+        </div>
+    </div>
+    <form th:if="${app.draft}" th:action="@{/cases/{ref}/lodge(ref=${app.reference})}" method="post">
+        <button type="submit" class="btn btn-success">Lodge application</button>
+    </form>
+    <h3>History</h3>
+    <table class="table table-condensed" id="history">
+        <thead><tr><th>When</th><th>Reference</th><th>From</th><th>To</th><th>By</th><th>Reason</th></tr></thead>
+        <tbody>
+        <tr th:each="h : ${history}">
+            <td th:text="${#dates.format(h.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+            <td th:text="${h.reference}"></td>
+            <td th:text="${h.oldState}"></td>
+            <td th:text="${h.newState}"></td>
+            <td th:text="${h.actor}"></td>
+            <td th:text="${h.reason}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <h3>Emails</h3>
+    <table class="table table-condensed" id="emails">
+        <thead><tr><th>When</th><th>To</th><th>Subject</th><th>Status</th></tr></thead>
+        <tbody>
+        <tr th:each="n : ${notifications}" th:classappend="${n.status == 'FAILED'} ? 'danger' : ''">
+            <td th:text="${#dates.format(n.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+            <td th:text="${n.recipient}"></td>
+            <td th:text="${n.subject}"></td>
+            <td><span th:text="${n.status}">SENT</span>
+                <div class="small" th:if="${n.errorMessage}" th:text="${n.errorMessage}"></div></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

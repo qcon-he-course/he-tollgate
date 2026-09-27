@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!-- $Id: new.html 1186 2018-02-09 11:21:35Z rmistry $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Closure')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Record a closure</h1>
+    <p class="text-muted">Active permits whose route crosses the structure during the closure are suspended.</p>
+    <form th:action="@{/closures/new}" th:object="${closureForm}" method="post" class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="structureId">Structure</label>
+            <div class="col-sm-5">
+                <select class="form-control" th:field="*{structureId}">
+                    <option value="">-- choose --</option>
+                    <option th:each="s : ${structures}" th:value="${s.id}" th:text="${s.code} + ' ' + ${s.name}"></option>
+                </select>
+                <span class="field-error" th:if="${#fields.hasErrors('structureId')}" th:errors="*{structureId}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="startDate">From (dd/mm/yyyy)</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" th:field="*{startDate}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="endDate">To (dd/mm/yyyy)</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" th:field="*{endDate}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="reason">Reason</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" th:field="*{reason}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('reason')}" th:errors="*{reason}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-4">
+                <button type="submit" class="btn btn-primary">Record closure</button>
+                <a class="btn btn-default" th:href="@{/closures}">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

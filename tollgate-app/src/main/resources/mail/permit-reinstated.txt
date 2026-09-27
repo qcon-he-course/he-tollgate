@@ -1,0 +1,6 @@
+Subject: Permit ${permitReference} reinstated
+Dear ${haulierName},
+
+The closure of ${structure} has ended and permit ${permitReference} is in force again for moves between ${firstMoveDate} and ${lastMoveDate}.
+
+Halvern Crossings Permit Office

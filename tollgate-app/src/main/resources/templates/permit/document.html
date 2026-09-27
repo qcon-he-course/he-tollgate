@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="'Permit ' + ${permit.versionRef}">Permit</title>
+    <style>
+        @page { size: A4; margin: 18mm; }
+        body { font-family: Helvetica, Arial, sans-serif; font-size: 10pt; }
+        h1 { text-align: center; font-size: 15pt; margin: 0; }
+        .ref { text-align: center; font-weight: bold; margin: 6pt 0 12pt; }
+        .banner { text-align: center; font-size: 15pt; font-weight: bold; border: 2pt solid #000; padding: 4pt; margin: 8pt 0; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 10pt; }
+        th, td { border: 0.5pt solid #666; padding: 3pt; text-align: left; vertical-align: top; }
+        th { width: 30%; }
+        h2 { font-size: 11pt; margin: 10pt 0 4pt; }
+    </style>
+</head>
+<body>
+<h1>HALVERN CROSSINGS PLC<br/>ABNORMAL LOAD MOVEMENT PERMIT</h1>
+<!-- INC-40877 reprints had no banner because conditions were not loaded, use the load width -->
+<div class="banner" id="escort-banner" th:if="${permit.widthM != null and permit.widthM >= 4.00}">ESCORT REQUIRED</div>
+<p class="ref">
+    Permit <span th:text="${permit.versionRef}">HX-P-2023-00042/1</span>
+    &#160;&#160; Application <span th:text="${permit.applicationReference}">HX-A-2023-000101</span>
+</p>
+<table>
+    <tr><th>Haulier</th><td th:text="${permit.haulierName}"></td></tr>
+    <tr><th>Vehicle</th><td th:text="${permit.vehicle}"></td></tr>
+    <tr><th>Load</th><td th:text="${permit.load}"></td></tr>
+    <tr><th>Gross mass</th><td th:text="${permit.grossMass}"></td></tr>
+    <tr><th>Dimensions</th><td th:text="${permit.dimensions}"></td></tr>
+    <tr><th>Hazardous</th><td th:text="${permit.hazardous}"></td></tr>
+    <tr><th>Movement dates</th>
+        <td th:text="${#temporals.format(permit.windowStart, 'dd/MM/yyyy')} + ' to ' + ${#temporals.format(permit.windowEnd, 'dd/MM/yyyy')}"></td></tr>
+    <tr><th>Route</th><td th:text="${permit.route}"></td></tr>
+</table>
+<h2>Trips</h2>
+<table>
+    <tr><th>Trip</th><th>Departure</th><th>Estuary crossing</th></tr>
+    <tr th:each="t : ${permit.trips}">
+        <td th:text="${t.tripNo}"></td>
+        <td th:text="${#temporals.format(t.departure, 'dd/MM/yyyy HH:mm')}"></td>
+        <td th:text="${t.crossing} == null ? '' : ${#temporals.format(t.crossing, 'dd/MM/yyyy HH:mm')}"></td>
+    </tr>
+</table>
+<h2>Conditions</h2>
+<p>The move must follow the route and times above.</p>
+<ol id="conditions">
+    <li th:each="c : ${permit.conditions}" th:text="${c.type} + (${c.detail} == null ? '' : ': ' + ${c.detail})"></li>
+</ol>
+</body>
+</html>

@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet id="ref-001-structures" author="gferrand" context="reference">
+        <insert tableName="structure">
+            <column name="code" value="NEB"/>
+            <column name="name" value="Northgate Estuary Bridge"/>
+            <column name="structure_type" value="CARRYING"/>
+            <column name="mass_rating_t" valueNumeric="150"/>
+            <column name="estuary" valueBoolean="true"/>
+        </insert>
+        <insert tableName="structure">
+            <column name="code" value="SEB"/>
+            <column name="name" value="Southreach Estuary Bridge"/>
+            <column name="structure_type" value="CARRYING"/>
+            <column name="mass_rating_t" valueNumeric="110"/>
+            <column name="estuary" valueBoolean="true"/>
+        </insert>
+        <insert tableName="structure">
+            <column name="code" value="S01"/>
+            <column name="name" value="Kelder Lane"/>
+            <column name="structure_type" value="OVERBRIDGE"/>
+            <column name="clearance_m" valueNumeric="5.30"/>
+            <column name="estuary" valueBoolean="false"/>
+        </insert>
+        <insert tableName="structure">
+            <column name="code" value="S02"/>
+            <column name="name" value="Mill Reach Viaduct"/>
+            <column name="structure_type" value="CARRYING"/>
+            <column name="mass_rating_t" valueNumeric="180"/>
+            <column name="estuary" valueBoolean="false"/>
+        </insert>
+        <insert tableName="structure">
+            <column name="code" value="S03"/>
+            <column name="name" value="Ashby Road"/>
+            <column name="structure_type" value="OVERBRIDGE"/>
+            <column name="clearance_m" valueNumeric="5.10"/>
+            <column name="estuary" valueBoolean="false"/>
+        </insert>
+        <insert tableName="structure">
+            <column name="code" value="S04"/>
+            <column name="name" value="Tarrow Brook Bridge"/>
+            <column name="structure_type" value="CARRYING"/>
+            <column name="mass_rating_t" valueNumeric="120"/>
+            <column name="estuary" valueBoolean="false"/>
+        </insert>
+        <insert tableName="structure">
+            <column name="code" value="S05"/>
+            <column name="name" value="Coldharbour Rail Bridge"/>
+            <column name="structure_type" value="OVERBRIDGE"/>
+            <column name="clearance_m" valueNumeric="5.45"/>
+            <column name="estuary" valueBoolean="false"/>
+        </insert>
+        <insert tableName="structure">
+            <column name="code" value="S06"/>
+            <column name="name" value="Penrose Underpass"/>
+            <column name="structure_type" value="CARRYING"/>
+            <column name="mass_rating_t" valueNumeric="200"/>
+            <column name="estuary" valueBoolean="false"/>
+        </insert>
+        <insert tableName="structure">
+            <column name="code" value="S07"/>
+            <column name="name" value="Hatch End Footbridge"/>
+            <column name="structure_type" value="OVERBRIDGE"/>
+            <column name="clearance_m" valueNumeric="5.70"/>
+            <column name="estuary" valueBoolean="false"/>
+        </insert>
+        <insert tableName="structure">
+            <column name="code" value="S08"/>
+            <column name="name" value="Quarry Lane Viaduct"/>
+            <column name="structure_type" value="CARRYING"/>
+            <column name="mass_rating_t" valueNumeric="95"/>
+            <column name="estuary" valueBoolean="false"/>
+        </insert>
+        <insert tableName="structure">
+            <column name="code" value="S09"/>
+            <column name="name" value="Brindle Street"/>
+            <column name="structure_type" value="OVERBRIDGE"/>
+            <column name="clearance_m" valueNumeric="5.05"/>
+            <column name="estuary" valueBoolean="false"/>
+        </insert>
+        <insert tableName="structure">
+            <column name="code" value="S10"/>
+            <column name="name" value="Salt Marsh Viaduct"/>
+            <column name="structure_type" value="CARRYING"/>
+            <column name="mass_rating_t" valueNumeric="140"/>
+            <column name="estuary" valueBoolean="false"/>
+        </insert>
+        <insert tableName="structure">
+            <column name="code" value="S11"/>
+            <column name="name" value="Orchard Way"/>
+            <column name="structure_type" value="OVERBRIDGE"/>
+            <column name="clearance_m" valueNumeric="5.90"/>
+            <column name="estuary" valueBoolean="false"/>
+        </insert>
+        <insert tableName="structure">
+            <column name="code" value="S12"/>
+            <column name="name" value="Fenwick Culvert Bridge"/>
+            <column name="structure_type" value="CARRYING"/>
+            <column name="mass_rating_t" valueNumeric="250"/>
+            <column name="estuary" valueBoolean="false"/>
+        </insert>
+        <insert tableName="structure">
+            <column name="code" value="S13"/>
+            <column name="name" value="Gallows Hill"/>
+            <column name="structure_type" value="OVERBRIDGE"/>
+            <column name="clearance_m" valueNumeric="5.25"/>
+            <column name="estuary" valueBoolean="false"/>
+        </insert>
+        <insert tableName="structure">
+            <column name="code" value="S14"/>
+            <column name="name" value="Westmere Canal Bridge"/>
+            <column name="structure_type" value="CARRYING"/>
+            <column name="mass_rating_t" valueNumeric="80"/>
+            <column name="estuary" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="ref-001-routes" author="gferrand" context="reference">
+        <insert tableName="route">
+            <column name="code" value="R1"/>
+            <column name="entry_junction" value="J1"/>
+            <column name="exit_junction" value="J4"/>
+            <column name="description" value="J1 to J4"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R1')"/>
+            <column name="seq" valueNumeric="1"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S01')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R1')"/>
+            <column name="seq" valueNumeric="2"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S02')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R1')"/>
+            <column name="seq" valueNumeric="3"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S03')"/>
+        </insert>
+        <insert tableName="route">
+            <column name="code" value="R2"/>
+            <column name="entry_junction" value="J1"/>
+            <column name="exit_junction" value="J9"/>
+            <column name="description" value="J1 to J9"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R2')"/>
+            <column name="seq" valueNumeric="1"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S01')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R2')"/>
+            <column name="seq" valueNumeric="2"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S02')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R2')"/>
+            <column name="seq" valueNumeric="3"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'NEB')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R2')"/>
+            <column name="seq" valueNumeric="4"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S10')"/>
+        </insert>
+        <insert tableName="route">
+            <column name="code" value="R3"/>
+            <column name="entry_junction" value="J4"/>
+            <column name="exit_junction" value="J9"/>
+            <column name="description" value="J4 to J9"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R3')"/>
+            <column name="seq" valueNumeric="1"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S04')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R3')"/>
+            <column name="seq" valueNumeric="2"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'SEB')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R3')"/>
+            <column name="seq" valueNumeric="3"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S11')"/>
+        </insert>
+        <insert tableName="route">
+            <column name="code" value="R4"/>
+            <column name="entry_junction" value="J2"/>
+            <column name="exit_junction" value="J6"/>
+            <column name="description" value="J2 to J6"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R4')"/>
+            <column name="seq" valueNumeric="1"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S05')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R4')"/>
+            <column name="seq" valueNumeric="2"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S06')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R4')"/>
+            <column name="seq" valueNumeric="3"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S07')"/>
+        </insert>
+        <insert tableName="route">
+            <column name="code" value="R5"/>
+            <column name="entry_junction" value="J6"/>
+            <column name="exit_junction" value="J9"/>
+            <column name="description" value="J6 to J9"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R5')"/>
+            <column name="seq" valueNumeric="1"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S08')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R5')"/>
+            <column name="seq" valueNumeric="2"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S09')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R5')"/>
+            <column name="seq" valueNumeric="3"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S10')"/>
+        </insert>
+        <insert tableName="route">
+            <column name="code" value="R6"/>
+            <column name="entry_junction" value="J3"/>
+            <column name="exit_junction" value="J8"/>
+            <column name="description" value="J3 to J8"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R6')"/>
+            <column name="seq" valueNumeric="1"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S06')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R6')"/>
+            <column name="seq" valueNumeric="2"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'NEB')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R6')"/>
+            <column name="seq" valueNumeric="3"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S12')"/>
+        </insert>
+        <insert tableName="route">
+            <column name="code" value="R7"/>
+            <column name="entry_junction" value="J5"/>
+            <column name="exit_junction" value="J8"/>
+            <column name="description" value="J5 to J8"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R7')"/>
+            <column name="seq" valueNumeric="1"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S13')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R7')"/>
+            <column name="seq" valueNumeric="2"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'SEB')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R7')"/>
+            <column name="seq" valueNumeric="3"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S14')"/>
+        </insert>
+        <insert tableName="route">
+            <column name="code" value="R8"/>
+            <column name="entry_junction" value="J1"/>
+            <column name="exit_junction" value="J9"/>
+            <column name="description" value="J1 to J9"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R8')"/>
+            <column name="seq" valueNumeric="1"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S01')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R8')"/>
+            <column name="seq" valueNumeric="2"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S02')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R8')"/>
+            <column name="seq" valueNumeric="3"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S04')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R8')"/>
+            <column name="seq" valueNumeric="4"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S06')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R8')"/>
+            <column name="seq" valueNumeric="5"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S08')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R8')"/>
+            <column name="seq" valueNumeric="6"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'NEB')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R8')"/>
+            <column name="seq" valueNumeric="7"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S10')"/>
+        </insert>
+        <insert tableName="route_segment">
+            <column name="route_id" valueComputed="(SELECT id FROM route WHERE code = 'R8')"/>
+            <column name="seq" valueNumeric="8"/>
+            <column name="structure_id" valueComputed="(SELECT id FROM structure WHERE code = 'S12')"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

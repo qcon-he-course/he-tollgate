@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <!-- Partner API - Integration Squad 2021 -->
+    <changeSet id="2021-01-api-key" author="mbellini">
+        <comment>PI-12 API keys for the haulier portal</comment>
+        <createTable tableName="api_key">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="haulier_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_api_key_haulier" references="haulier(id)"/>
+            </column>
+            <column name="api_key" type="VARCHAR(40)"><constraints nullable="false" unique="true"/></column>
+            <column name="label" type="VARCHAR(100)"/>
+            <column name="active" type="BOOLEAN" defaultValueBoolean="true"><constraints nullable="false"/></column>
+            <column name="created_at" type="TIMESTAMP"><constraints nullable="false"/></column>
+            <column name="last_used_at" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2021-02-demo-api-keys" author="arahman" context="demo">
+        <comment>PI-15 keys for the portal test hauliers</comment>
+        <insert tableName="api_key">
+            <column name="haulier_id" valueNumeric="1"/>
+            <column name="api_key" value="HXPK-c871ef2a89f2551391e36e8abc377eef"/>
+            <column name="label" value="Portal test key"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_at" valueDate="2021-04-12T09:00:00"/>
+        </insert>
+        <insert tableName="api_key">
+            <column name="haulier_id" valueNumeric="2"/>
+            <column name="api_key" value="HXPK-37ef948007657cdb818225e74dc8d5d4"/>
+            <column name="label" value="Portal test key"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_at" valueDate="2021-04-12T09:00:00"/>
+        </insert>
+        <insert tableName="api_key">
+            <column name="haulier_id" valueNumeric="3"/>
+            <column name="api_key" value="HXPK-f93b0e9b322da335c5b64230aa180d53"/>
+            <column name="label" value="Portal test key"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_at" valueDate="2021-04-12T09:00:00"/>
+        </insert>
+        <insert tableName="api_key">
+            <column name="haulier_id" valueNumeric="4"/>
+            <column name="api_key" value="HXPK-10da1cfb788a5dbc5a2570f4e7a51a59"/>
+            <column name="label" value="Portal test key"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_at" valueDate="2021-04-12T09:00:00"/>
+        </insert>
+        <insert tableName="api_key">
+            <column name="haulier_id" valueNumeric="5"/>
+            <column name="api_key" value="HXPK-5b60b816d295df17a3e48a3d8719ef9e"/>
+            <column name="label" value="Portal test key"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_at" valueDate="2021-04-12T09:00:00"/>
+        </insert>
+        <insert tableName="api_key">
+            <column name="haulier_id" valueNumeric="6"/>
+            <column name="api_key" value="HXPK-ce9dc04c89b887188c3307c85e72488f"/>
+            <column name="label" value="Portal test key"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_at" valueDate="2021-04-12T09:00:00"/>
+        </insert>
+        <insert tableName="api_key">
+            <column name="haulier_id" valueNumeric="7"/>
+            <column name="api_key" value="HXPK-8df3445aa56ebe1446bb4f7e440ef500"/>
+            <column name="label" value="Portal test key"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_at" valueDate="2021-04-12T09:00:00"/>
+        </insert>
+        <insert tableName="api_key">
+            <column name="haulier_id" valueNumeric="8"/>
+            <column name="api_key" value="HXPK-7e4ccbe124670b16a4979fc64d01e47f"/>
+            <column name="label" value="Portal test key"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_at" valueDate="2021-04-12T09:00:00"/>
+        </insert>
+        <insert tableName="api_key">
+            <column name="haulier_id" valueNumeric="9"/>
+            <column name="api_key" value="HXPK-f9471094a2a47941e38de321b6338d08"/>
+            <column name="label" value="Portal test key"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_at" valueDate="2021-04-12T09:00:00"/>
+        </insert>
+        <insert tableName="api_key">
+            <column name="haulier_id" valueNumeric="10"/>
+            <column name="api_key" value="HXPK-9b662e3fc37af1a1bdd8a2c45f9ccd4c"/>
+            <column name="label" value="Portal test key"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_at" valueDate="2021-04-12T09:00:00"/>
+        </insert>
+        <insert tableName="api_key">
+            <column name="haulier_id" valueNumeric="11"/>
+            <column name="api_key" value="HXPK-3e149f1135b656debfac146761410c1f"/>
+            <column name="label" value="Portal test key"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_at" valueDate="2021-04-12T09:00:00"/>
+        </insert>
+        <insert tableName="api_key">
+            <column name="haulier_id" valueNumeric="12"/>
+            <column name="api_key" value="HXPK-d3b3d34560843d3dca3b74be10ecf2f3"/>
+            <column name="label" value="Portal test key"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="created_at" valueDate="2021-04-12T09:00:00"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

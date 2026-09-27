@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!-- $Id: list.html 1186 2018-02-09 11:21:35Z rmistry $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Closures')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Structure closures</h1>
+    <p><a class="btn btn-primary" th:href="@{/closures/new}">Record a closure</a></p>
+    <table class="table table-striped table-condensed">
+        <thead><tr><th>Structure</th><th>From</th><th>To</th><th>Reason</th><th>Status</th><th>Recorded</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="c : ${closures}">
+            <td th:text="${c.structureCode} + ' ' + ${c.structureName}">S04 Tarrow Brook Bridge</td>
+            <td th:text="${#dates.format(c.startDate, 'dd/MM/yyyy')}"></td>
+            <td th:text="${#dates.format(c.endDate, 'dd/MM/yyyy')}"></td>
+            <td th:text="${c.reason}"></td>
+            <td th:text="${c.status}">ACTIVE</td>
+            <td th:text="${c.recordedBy}"></td>
+            <td>
+                <form th:if="${c.active}" th:action="@{/closures/{id}/end(id=${c.id})}" method="post" class="inline">
+                    <button type="submit" class="btn btn-default btn-xs">End closure</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

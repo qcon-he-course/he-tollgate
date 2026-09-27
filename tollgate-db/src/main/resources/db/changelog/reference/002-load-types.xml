@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet id="ref-002-load-types" author="gferrand" context="reference">
+        <insert tableName="load_type">
+            <column name="code" value="WIND_TURBINE_BLADE"/>
+            <column name="description" value="Wind turbine blade"/>
+        </insert>
+        <insert tableName="load_type">
+            <column name="code" value="TRANSFORMER"/>
+            <column name="description" value="Electrical transformer"/>
+        </insert>
+        <insert tableName="load_type">
+            <column name="code" value="MOBILE_CRANE"/>
+            <column name="description" value="Mobile crane"/>
+        </insert>
+        <insert tableName="load_type">
+            <column name="code" value="CONSTRUCTION_PLANT"/>
+            <column name="description" value="Construction plant"/>
+        </insert>
+        <insert tableName="load_type">
+            <column name="code" value="MODULAR_BUILDING"/>
+            <column name="description" value="Modular building unit"/>
+        </insert>
+        <insert tableName="load_type">
+            <column name="code" value="HAZARDOUS_BULK"/>
+            <column name="description" value="Hazardous bulk load"/>
+        </insert>
+        <insert tableName="load_type">
+            <column name="code" value="OTHER"/>
+            <column name="description" value="Other abnormal load"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

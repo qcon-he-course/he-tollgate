@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="2017-001-grants" author="koduya">
+        <comment>Application account tollgate_app gets data access only. Tables are owned by tollgate_owner.</comment>
+        <sql>
+            GRANT USAGE ON SCHEMA public TO tollgate_app;
+            ALTER DEFAULT PRIVILEGES FOR ROLE tollgate_owner IN SCHEMA public
+                GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO tollgate_app;
+            ALTER DEFAULT PRIVILEGES FOR ROLE tollgate_owner IN SCHEMA public
+                GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO tollgate_app;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

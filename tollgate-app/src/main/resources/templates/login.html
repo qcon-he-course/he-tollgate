@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!-- $Id: login.html 1074 2017-09-28 16:30:18Z koduya $ -->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/layout :: head('Sign in')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+            <h2>Tollgate</h2>
+            <p class="text-muted">Halvern Crossings abnormal load permits</p>
+            <div class="alert alert-danger" th:if="${param.error}">User name or password not recognised.</div>
+            <div class="alert alert-info" th:if="${param.logout}">You have signed out.</div>
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="username">User name</label>
+                    <input type="text" class="form-control" id="username" name="username" autofocus="autofocus"/>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign in</button>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

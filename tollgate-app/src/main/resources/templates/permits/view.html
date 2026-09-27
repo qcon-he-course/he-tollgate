@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- $Id: view.html 1179 2018-01-31 14:58:06Z gferrand $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Permit')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Permit <span th:text="${permit.reference}">HX-P-2018-00001</span>
+        <span class="label label-default" th:text="${permit.status}">ACTIVE</span></h1>
+    <table class="table table-condensed">
+        <tr><th>Application</th><td><a th:href="@{/applications/{ref}(ref=${permit.applicationReference})}" th:text="${permit.applicationReference}"></a></td></tr>
+        <tr><th>Haulier</th><td th:text="${permit.haulierName}"></td></tr>
+        <tr><th>Route</th><td th:text="${permit.routeCode}"></td></tr>
+        <tr><th>Movement dates</th><td th:text="${#dates.format(permit.firstMoveDate, 'dd/MM/yyyy')} + ' to ' + ${#dates.format(permit.lastMoveDate, 'dd/MM/yyyy')}"></td></tr>
+        <tr><th>Issued</th><td th:text="${permit.issuedBy} + ', ' + ${#dates.format(permit.issuedAt, 'dd/MM/yyyy HH:mm')}"></td></tr>
+        <tr th:if="${permit.statusReason}"><th>Status reason</th><td th:text="${permit.statusReason}"></td></tr>
+    </table>
+    <p><a class="btn btn-primary" th:href="@{/permits/{ref}/document(ref=${permit.reference})}">Printed permit (PDF)</a></p>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

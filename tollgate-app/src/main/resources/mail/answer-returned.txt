@@ -1,0 +1,12 @@
+Subject: Application ${reference}: more information needed
+Dear ${haulierName},
+
+The permit office has returned your answer to the following question on application ${reference}:
+
+  ${question}
+
+Reason: ${note}
+
+Please send a revised answer to the permit office, quoting ${reference}.
+
+Halvern Crossings Permit Office

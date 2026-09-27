@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<!--
+  Tollgate - Abnormal Load Permit System
+  Copyright (c) 2017 Pellowe Tarn Systems Ltd. All rights reserved.
+  $Id: layout.html 1075 2017-09-29 11:02:47Z koduya $
+-->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${title} + ' - Tollgate'">Tollgate</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/tollgate.css}"/>
+    <meta name="_csrf" th:if="${_csrf != null}" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}"/>
+</head>
+<body>
+
+<nav th:fragment="nav" class="navbar navbar-default navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/}">Tollgate</a>
+        </div>
+        <ul class="nav navbar-nav" sec:authorize="isAuthenticated()">
+            <li><a th:href="@{/dashboard}">Cases</a></li>
+            <!-- CR-144 CR-155 CR-180 -->
+            <li><a th:href="@{/my-cases}">My cases</a></li>
+            <li><a th:href="@{/cases/search}">Search</a></li>
+            <li><a th:href="@{/reports}">Reports</a></li>
+            <li><a th:href="@{/applications}">Applications</a></li>
+            <li><a th:href="@{/permits}">Permits</a></li>
+            <li><a th:href="@{/closures}">Closures</a></li>
+            <li><a th:href="@{/panel}">Panel</a></li>
+            <li><a th:href="@{/amendments}">Amendments</a></li>
+            <li class="dropdown" sec:authorize="hasRole('ADMIN')">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a th:href="@{/admin/structures}">Structures</a></li>
+                    <li><a th:href="@{/admin/routes}">Routes</a></li>
+                    <li><a th:href="@{/admin/load-types}">Load types</a></li>
+                    <li><a th:href="@{/admin/questions}">Questions</a></li>
+                    <li><a th:href="@{/admin/holidays}">Holidays</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a th:href="@{/admin/hauliers}">Hauliers</a></li>
+                    <li><a th:href="@{/admin/users}">Users</a></li>
+                </ul>
+            </li>
+        </ul>
+        <form class="navbar-form navbar-right" sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+            <span class="navbar-text" sec:authentication="name">officer1</span>
+            <button type="submit" class="btn btn-default btn-sm">Sign out</button>
+        </form>
+    </div>
+</nav>
+
+<div th:fragment="messages">
+    <div class="alert alert-success" th:if="${message}" th:text="${message}">Saved.</div>
+    <div class="alert alert-danger" th:if="${error}" th:text="${error}">Error.</div>
+</div>
+
+<footer th:fragment="footer" class="container tg-footer">
+    <hr/>
+    <p class="text-muted small">Tollgate &middot; Halvern Crossings plc</p>
+    <script th:src="@{/webjars/jquery/1.12.4/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/tollgate.js}"></script>
+</footer>
+
+</body>
+</html>

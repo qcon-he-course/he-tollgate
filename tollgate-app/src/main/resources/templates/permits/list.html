@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!-- $Id: list.html 1179 2018-01-31 14:58:06Z gferrand $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Permits')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Permits</h1>
+    <input type="text" class="form-control table-filter" data-table="#permits" placeholder="Filter"/>
+    <table id="permits" class="table table-striped table-condensed">
+        <thead><tr><th>Permit</th><th>Application</th><th>Haulier</th><th>Route</th><th>Movement dates</th><th>Status</th></tr></thead>
+        <tbody>
+        <tr th:each="p : ${permits}">
+            <td><a th:href="@{/permits/{ref}(ref=${p.reference})}" th:text="${p.reference}">HX-P-2018-00001</a></td>
+            <td><a th:href="@{/applications/{ref}(ref=${p.applicationReference})}" th:text="${p.applicationReference}"></a></td>
+            <td th:text="${p.haulierName}"></td>
+            <td th:text="${p.routeCode}"></td>
+            <td th:text="${#dates.format(p.firstMoveDate, 'dd/MM/yyyy')} + ' to ' + ${#dates.format(p.lastMoveDate, 'dd/MM/yyyy')}"></td>
+            <td th:text="${p.status}">ACTIVE</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

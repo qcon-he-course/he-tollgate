@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<!-- $Id: 403.html 1076 2017-09-29 11:20:15Z koduya $ -->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/layout :: head('Not allowed')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Not allowed</h1>
+    <p>Your account does not have access to this page. If you need access, ask a Tollgate administrator.</p>
+    <p><a th:href="@{/}">Home</a></p>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

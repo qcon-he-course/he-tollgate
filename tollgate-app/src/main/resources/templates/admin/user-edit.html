@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!-- $Id: user-edit.html 1066 2017-09-25 10:27:44Z koduya $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('User')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1 th:text="${user != null} ? 'User ' + ${user.username} : 'New user'">User</h1>
+    <form th:action="${user != null} ? @{/admin/users/{id}(id=${user.id})} : @{/admin/users/new}"
+          th:object="${userForm}" method="post" class="form-horizontal">
+        <div class="form-group" th:if="${user == null}">
+            <label class="col-sm-2 control-label" for="username">Username</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" th:field="*{username}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="fullName">Full name</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" th:field="*{fullName}"/>
+                <span class="field-error" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="email">Email</label>
+            <div class="col-sm-4"><input type="text" class="form-control" th:field="*{email}"/></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Roles</label>
+            <div class="col-sm-4">
+                <label class="checkbox-inline" th:each="r : ${allRoles}">
+                    <input type="checkbox" th:field="*{roles}" th:value="${r}"/> <span th:text="${r}">OFFICER</span>
+                </label>
+                <div class="field-error" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-4">
+                <label class="checkbox-inline"><input type="checkbox" th:field="*{enabled}"/> Enabled</label>
+                <label class="checkbox-inline" th:if="${user != null}"><input type="checkbox" th:field="*{panelChair}"/> Panel chair (officers only)</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="newPassword"
+                   th:text="${user == null} ? 'Password' : 'New password'">Password</label>
+            <div class="col-sm-4">
+                <input type="password" class="form-control" th:field="*{newPassword}" autocomplete="new-password"/>
+                <span class="help-block" th:if="${user != null}">Leave blank to keep the current password.</span>
+                <span class="field-error" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-4">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a class="btn btn-default" th:href="@{/admin/users}">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

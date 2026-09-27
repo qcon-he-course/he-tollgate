@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Settings')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Settings</h1>
+    <form method="post" th:action="@{/admin/settings}" class="form-horizontal" id="settings-form">
+        <div class="form-group" th:each="s : ${settings}">
+            <label class="col-sm-4 control-label" th:for="${s.key}" th:text="${s.description}">Setting</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" th:id="${s.key}" th:name="${s.key}" th:value="${s.value}"/>
+            </div>
+            <div class="col-sm-6 help-block">
+                <span th:if="${s.updatedBy != null}" th:text="'Last changed by ' + ${s.updatedBy} + ' on ' + ${#dates.format(s.updatedAt, 'dd/MM/yyyy HH:mm')}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-8">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </form>
+    <h2>Feature flags</h2>
+    <p class="text-muted">Flags are changed by the support team.</p>
+    <table class="table table-condensed" id="flags">
+        <thead><tr><th>Flag</th><th>On</th><th>Description</th><th>Changed</th></tr></thead>
+        <tbody>
+        <tr th:each="f : ${flags}">
+            <td th:text="${f['name']}"></td>
+            <td th:text="${f['enabled']} ? 'Yes' : 'No'"></td>
+            <td th:text="${f['description']}"></td>
+            <td th:text="${f['updated_by']}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

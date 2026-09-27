@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/layout :: head('Panel')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Structures panel</h1>
+    <p class="text-muted">The panel sits on Thursdays at 10:00. Cases ready by 17:00 on Tuesday are listed for that week.</p>
+    <div th:each="entry : ${sittings}" class="panel panel-default">
+        <div class="panel-heading"><strong th:text="${#temporals.format(entry.key.sittingDate, 'EEEE dd/MM/yyyy')}">Thursday</strong>
+            <span class="label label-default" th:text="${entry.key.status}">SCHEDULED</span></div>
+        <table class="table table-condensed">
+            <tr th:each="c : ${entry.value}">
+                <td><a th:href="@{/cases/{ref}(ref=${c.reference})}" th:text="${c.reference}"></a></td>
+                <td th:text="${c.state}"></td>
+                <td th:text="${c.assignedEngineer}"></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(entry.value)}"><td class="text-muted">No cases listed.</td></tr>
+        </table>
+    </div>
+    <p th:if="${#maps.isEmpty(sittings)}">No sittings scheduled.</p>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

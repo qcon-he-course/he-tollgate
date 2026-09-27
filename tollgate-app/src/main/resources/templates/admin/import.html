@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<!-- $Id: import.html 1164 2018-01-16 17:48:03Z koduya $ -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Import')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Import applications</h1>
+    <p>Upload the CSV export of the permit spreadsheet. Each row becomes a draft application.</p>
+    <form th:action="@{/admin/import}" method="post" enctype="multipart/form-data" class="form-inline">
+        <input type="file" name="file" accept=".csv" class="form-control"/>
+        <button type="submit" class="btn btn-primary">Import</button>
+    </form>
+    <div th:if="${created}">
+        <h3 th:text="${#lists.size(created)} + ' drafts created'">0 drafts created</h3>
+        <ul><li th:each="ref : ${created}"><a th:href="@{/applications/{ref}(ref=${ref})}" th:text="${ref}"></a></li></ul>
+    </div>
+    <div th:if="${skipped != null and !#lists.isEmpty(skipped)}">
+        <h3 th:text="${#lists.size(skipped)} + ' rows skipped'">0 rows skipped</h3>
+        <ul><li th:each="s : ${skipped}" th:text="${s}"></li></ul>
+    </div>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

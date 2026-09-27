@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="2017-002-structure" author="gferrand">
+        <createTable tableName="structure">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="code" type="VARCHAR(5)"><constraints nullable="false" unique="true"/></column>
+            <column name="name" type="VARCHAR(100)"><constraints nullable="false"/></column>
+            <column name="structure_type" type="VARCHAR(12)"><constraints nullable="false"/></column>
+            <column name="mass_rating_t" type="INTEGER"/>
+            <column name="clearance_m" type="NUMERIC(4,2)"/>
+            <column name="estuary" type="BOOLEAN" defaultValueBoolean="false"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2017-002-route" author="gferrand">
+        <createTable tableName="route">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="code" type="VARCHAR(5)"><constraints nullable="false" unique="true"/></column>
+            <column name="entry_junction" type="VARCHAR(5)"><constraints nullable="false"/></column>
+            <column name="exit_junction" type="VARCHAR(5)"><constraints nullable="false"/></column>
+            <column name="description" type="VARCHAR(200)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2017-002-route-segment" author="gferrand">
+        <createTable tableName="route_segment">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="route_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_route_segment_route" references="route(id)"/>
+            </column>
+            <column name="seq" type="INTEGER"><constraints nullable="false"/></column>
+            <column name="structure_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_route_segment_structure" references="structure(id)"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="route_segment" columnNames="route_id, seq" constraintName="uq_route_segment_seq"/>
+    </changeSet>
+
+    <changeSet id="2017-002-load-type" author="gferrand">
+        <createTable tableName="load_type">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="code" type="VARCHAR(40)"><constraints nullable="false" unique="true"/></column>
+            <column name="description" type="VARCHAR(200)"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2017-002-holiday" author="rmistry">
+        <createTable tableName="holiday">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="holiday_date" type="DATE"><constraints nullable="false" unique="true"/></column>
+            <column name="description" type="VARCHAR(100)"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2017-002-structure-closure" author="rmistry">
+        <createTable tableName="structure_closure">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="structure_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_closure_structure" references="structure(id)"/>
+            </column>
+            <column name="start_date" type="DATE"><constraints nullable="false"/></column>
+            <column name="end_date" type="DATE"><constraints nullable="false"/></column>
+            <column name="reason" type="VARCHAR(500)"><constraints nullable="false"/></column>
+            <column name="status" type="VARCHAR(10)"><constraints nullable="false"/></column>
+            <column name="recorded_by" type="VARCHAR(50)"><constraints nullable="false"/></column>
+            <column name="recorded_at" type="TIMESTAMP"><constraints nullable="false"/></column>
+            <column name="ended_by" type="VARCHAR(50)"/>
+            <column name="ended_at" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

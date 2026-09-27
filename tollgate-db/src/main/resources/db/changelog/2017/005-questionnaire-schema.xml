@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="2017-005-question-set" author="koduya">
+        <createTable tableName="question_set">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="load_type_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_question_set_load_type" references="load_type(id)"/>
+            </column>
+            <column name="version" type="INTEGER"><constraints nullable="false"/></column>
+            <column name="active" type="BOOLEAN" defaultValueBoolean="true"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2017-005-question" author="koduya">
+        <createTable tableName="question">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="question_set_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_question_set" references="question_set(id)"/>
+            </column>
+            <column name="seq" type="INTEGER"><constraints nullable="false"/></column>
+            <column name="question_text" type="VARCHAR(500)"><constraints nullable="false"/></column>
+            <column name="mandatory" type="BOOLEAN" defaultValueBoolean="true"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2017-005-case-question" author="koduya">
+        <comment>BR-22: each lodged application keeps its own copy of the questions.</comment>
+        <createTable tableName="case_question">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="application_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_case_question_application" references="movement_application(id)"/>
+            </column>
+            <column name="seq" type="INTEGER"><constraints nullable="false"/></column>
+            <column name="question_text" type="VARCHAR(500)"><constraints nullable="false"/></column>
+            <column name="mandatory" type="BOOLEAN"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2017-005-case-answer" author="koduya">
+        <createTable tableName="case_answer">
+            <column name="id" type="BIGINT" autoIncrement="true"><constraints primaryKey="true"/></column>
+            <column name="case_question_id" type="BIGINT">
+                <constraints nullable="false" unique="true" foreignKeyName="fk_case_answer_question" references="case_question(id)"/>
+            </column>
+            <column name="answer_text" type="VARCHAR(2000)"/>
+            <column name="answered_at" type="TIMESTAMP"/>
+            <!-- PENDING, ACCEPTED, RETURNED -->
+            <column name="review_status" type="VARCHAR(10)"><constraints nullable="false"/></column>
+            <column name="review_note" type="VARCHAR(1000)"/>
+            <column name="reviewed_by" type="VARCHAR(50)"/>
+            <column name="reviewed_at" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

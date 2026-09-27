@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Dashboard')"></head>
+<body>
+<nav th:replace="fragments/layout :: nav"></nav>
+<div class="container">
+    <div th:replace="fragments/layout :: messages"></div>
+    <h1>Open cases</h1>
+    <p id="sla-summary">
+        <span class="label label-danger" th:text="${red} + ' red'">2 red</span>
+        <span class="label label-warning" th:text="${amber} + ' amber'">5 amber</span>
+        <span class="label label-success" th:text="${green} + ' green'">20 green</span>
+        <span class="text-muted" th:text="${rows.size()} + ' open cases'">27 open cases</span>
+    </p>
+    <form method="get" th:action="@{/dashboard}" class="form-inline" style="margin-bottom:10px">
+        <select name="track" class="form-control input-sm">
+            <option value="">All tracks</option>
+            <option th:each="t : ${ {'EXPRESS','DESK','ENGINEER','PANEL'} }" th:value="${t}" th:text="${t}"
+                    th:selected="${t == filter.track}"></option>
+        </select>
+        <select name="status" class="form-control input-sm">
+            <option value="">All SLA statuses</option>
+            <option th:each="s : ${ {'RED','AMBER','GREEN'} }" th:value="${s}" th:text="${s}"
+                    th:selected="${s == filter.status}"></option>
+        </select>
+        <select name="officer" class="form-control input-sm">
+            <option value="">All officers</option>
+            <option th:each="o : ${officers}" th:value="${o.username}" th:text="${o.fullName}"
+                    th:selected="${o.username == filter.officer}"></option>
+        </select>
+        <button type="submit" class="btn btn-default btn-sm">Filter</button>
+    </form>
+    <table class="table table-condensed" id="cases">
+        <thead>
+        <tr><th>SLA</th><th>Days left</th><th>Case</th><th>Haulier</th><th>Track</th><th>State</th><th>Officer</th><th>Lodged</th><th>Route</th><th>Engineer</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="r : ${rows}"
+            th:classappend="${r.slaStatus == 'RED'} ? 'danger' : (${r.slaStatus == 'AMBER'} ? 'warning' : '')">
+            <td th:text="${r.slaStatus} ?: '-'">GREEN</td>
+            <td th:text="${r.daysRemaining} ?: '-'">3</td>
+            <td><a th:href="@{/cases/{ref}(ref=${r.reference})}" th:text="${r.reference}"></a></td>
+            <td th:text="${r.haulierName}"></td>
+            <td th:text="${r.track} ?: 'Not assessed'"></td>
+            <td th:text="${r.state}"></td>
+            <td th:text="${r.assignedOfficer}"></td>
+            <td th:text="${#temporals.format(r.lodgedOn, 'dd/MM/yyyy')}"></td>
+            <!-- CR-150 -->
+            <td th:text="${routes[r.reference]}"></td>
+            <td th:text="${engineers[r.reference]}"></td>
+        </tr>
+        <tr th:if="${rows.isEmpty()}"><td colspan="10" class="text-muted">No open cases match.</td></tr>
+        </tbody>
+    </table>
+</div>
+<footer th:replace="fragments/layout :: footer"></footer>
+</body>
+</html>

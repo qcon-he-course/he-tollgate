@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.18</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.halvern.tollgate</groupId>
+    <artifactId>tollgate-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Tollgate</name>
+    <description>Abnormal Load Permit System for Halvern Crossings plc</description>
+
+    <organization>
+        <name>Pellowe Tarn Systems Ltd</name>
+    </organization>
+
+    <modules>
+        <module>tollgate-db</module>
+        <module>tollgate-app</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.release>17</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <commons-lang.version>2.6</commons-lang.version>
+        <commons-text.version>1.9</commons-text.version>
+        <itext.version>2.1.7</itext.version>
+        <bootstrap.version>3.3.7</bootstrap.version>
+        <jquery.version>1.12.4</jquery.version>
+        <!-- TG-118 keep Lombok in step with the IDE plugin version used by the team -->
+        <lombok.version>1.18.24</lombok.version>
+        <springfox.version>3.0.0</springfox.version>
+        <openhtmltopdf.version>1.0.10</openhtmltopdf.version>
+        <!-- Target for the Spring Boot 3 upgrade, see docs/upgrade-boot3.md -->
+        <boot3.version>3.0.5</boot3.version>
+        <!-- ADR-0011: tests run on the same PostgreSQL major version as production -->
+        <zonky-embedded-database.version>2.2.0</zonky-embedded-database.version>
+        <zonky-embedded-postgres.version>2.0.2</zonky-embedded-postgres.version>
+        <postgres-binaries.version>15.1.0</postgres-binaries.version>
+        <!-- CR-170 build quality -->
+        <jacoco.version>0.8.11</jacoco.version>
+        <checkstyle-plugin.version>3.3.1</checkstyle-plugin.version>
+        <spotbugs-plugin.version>4.8.2.0</spotbugs-plugin.version>
+        <guava.version>32.1.3-jre</guava.version>
+    </properties>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.zonky.test.postgres</groupId>
+                <artifactId>embedded-postgres-binaries-bom</artifactId>
+                <version>${postgres-binaries.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.zonky.test</groupId>
+                <artifactId>embedded-database-spring-test</artifactId>
+                <version>${zonky-embedded-database.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.zonky.test</groupId>
+                <artifactId>embedded-postgres</artifactId>
+                <version>${zonky-embedded-postgres.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons-lang.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${commons-text.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lowagie</groupId>
+                <artifactId>itext</artifactId>
+                <version>${itext.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-boot-starter</artifactId>
+                <version>${springfox.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.openhtmltopdf</groupId>
+                <artifactId>openhtmltopdf-pdfbox</artifactId>
+                <version>${openhtmltopdf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>bootstrap</artifactId>
+                <version>${bootstrap.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>jquery</artifactId>
+                <version>${jquery.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${checkstyle-plugin.version}</version>
+                </plugin>
+                <!-- CR-170 static analysis, run with ./mvnw spotbugs:check -->
+                <plugin>
+                    <groupId>com.github.spotbugs</groupId>
+                    <artifactId>spotbugs-maven-plugin</artifactId>
+                    <version>${spotbugs-plugin.version}</version>
+                    <configuration>
+                        <effort>Max</effort>
+                        <threshold>Medium</threshold>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>
